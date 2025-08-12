@@ -18,5 +18,6 @@ public class HelloController {
     @GetMapping("/")
     public String getHello(){
         return "Hello spring boot with alo";
+//        alo
     }
 }
