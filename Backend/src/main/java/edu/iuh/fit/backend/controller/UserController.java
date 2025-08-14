@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,14 +27,21 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserServiceImpl userServiceImpl) {
+    public UserController(UserServiceImpl userServiceImpl, PasswordEncoder passwordEncoder) {
         this.userService = userServiceImpl;
+        this.passwordEncoder = passwordEncoder;
 
     }
 
     @PostMapping("/users")
     public ResponseEntity<ApiResponse<User>> createUser(@RequestBody @Valid User user) {
+//        Hash password
+//        Alo
+//        Sfs
+        String hashPassword = this.passwordEncoder.encode(user.getPassword());
+        user.setPassword(hashPassword);
         User created = userService.createUser(user);
         var result = new ApiResponse<>(HttpStatus.CREATED.value(), "createUser", created, null);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
