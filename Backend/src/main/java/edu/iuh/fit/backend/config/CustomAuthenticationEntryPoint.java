@@ -16,6 +16,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /*
  * @description
@@ -39,7 +40,10 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
         ApiResponse<Object> res = new ApiResponse<>();
         res.setStatus(HttpStatus.UNAUTHORIZED.value());
-        res.setErrorCode(authException.getCause().getMessage());
+        String errorMessage = Optional.ofNullable(authException.getCause())
+                                .map(Throwable::getMessage)
+                                .orElse(authException.getMessage());
+        res.setErrorCode(errorMessage);
         res.setMessage("Invalid Token");
         objectMapper.writeValue(response.getWriter(), res);
     }
