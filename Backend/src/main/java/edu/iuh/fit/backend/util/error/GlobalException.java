@@ -2,7 +2,7 @@
  * @ (#) .java    1.0
  * Copyright (c)  IUH. All rights reserved.
  */
-package edu.iuh.fit.backend.controller.errors;
+package edu.iuh.fit.backend.util.error;
 
 import edu.iuh.fit.backend.domain.ApiResponse;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -44,7 +44,10 @@ public class GlobalException {
                 .collect(Collectors.toList());
         String errors = String.join("; ", errorList);
 
-        ApiResponse<Object> response = new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), errors, null, "VALIDATION_ERROR");
+        ApiResponse<Object> response =  new ApiResponse<>(HttpStatus.BAD_REQUEST.value(),
+                errorList.size() > 1 ? errorList : errorList.getFirst(),
+                null,
+                ex.getBody().getDetail());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 

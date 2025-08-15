@@ -22,12 +22,14 @@ import java.util.Collections;
  */
 @Component("userDetailsService")
 @AllArgsConstructor
-public class UserDetailCustom implements UserDetailsService {
+public class UserDetailsCustom implements UserDetailsService {
     private final UserService userService;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         edu.iuh.fit.backend.domain.User user = this.userService.getUserByUserName(username);
-
+        if(username == null){
+            throw new UsernameNotFoundException("Username / password khong hop le");
+        }
         return new User(
                 user.getEmail(),
                 user.getPassword(),

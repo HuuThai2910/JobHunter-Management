@@ -2,7 +2,7 @@
  * @ (#) .java    1.0
  * Copyright (c)  IUH. All rights reserved.
  */
-package edu.iuh.fit.backend.controller.errors;
+package edu.iuh.fit.backend.util.error;
 
 /*
  * @description

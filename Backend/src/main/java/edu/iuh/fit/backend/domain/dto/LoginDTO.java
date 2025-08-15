@@ -4,6 +4,7 @@
  */
 package edu.iuh.fit.backend.domain.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 /*
@@ -18,6 +19,8 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class LoginDTO {
+    @NotBlank(message = "User name cannot be blank")
     private String userName;
+    @NotBlank(message = "Password cannot be blank")
     private String password;
 }

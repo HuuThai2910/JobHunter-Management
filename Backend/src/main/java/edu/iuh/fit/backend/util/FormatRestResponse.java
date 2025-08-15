@@ -4,6 +4,7 @@
  */
 package edu.iuh.fit.backend.util;
 
+import edu.iuh.fit.backend.domain.ApiResponse;
 import edu.iuh.fit.backend.domain.RestResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.MethodParameter;
@@ -40,7 +41,9 @@ public class FormatRestResponse implements ResponseBodyAdvice<Object> {
 
         RestResponse<Object> res = new RestResponse<Object>();
         res.setStatusCode(status);
-        if(status >= 400){
+        if (body instanceof ApiResponse) {
+            return body;
+        }else if(status >= 400){
             return body;
         }else {
             res.setData(body);

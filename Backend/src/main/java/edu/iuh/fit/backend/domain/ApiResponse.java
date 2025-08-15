@@ -24,12 +24,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ApiResponse<T> {
     private int status;
-    private String message;
+    private Object message;
     private T data;
     private String errorCode;
     private LocalDateTime timestamp;
 
-    public ApiResponse(int status, String message, T data, String errorCode) {
+    public ApiResponse(int status, Object message, T data, String errorCode) {
         this.status = status;
         this.message = message;
         this.data = data;
