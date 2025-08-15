@@ -27,7 +27,7 @@ public class UserDetailsCustom implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         edu.iuh.fit.backend.domain.User user = this.userService.getUserByUserName(username);
-        if(username == null){
+        if(user == null){
             throw new UsernameNotFoundException("Username / password khong hop le");
         }
         return new User(

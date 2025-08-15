@@ -23,6 +23,10 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
+import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
 
 import javax.crypto.SecretKey;
@@ -46,14 +50,21 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   CustomAuthenticationEntryPoint customAuthenticationEntryPoint) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/login").permitAll()
                         .anyRequest().authenticated())
-                .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
+                .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())
+                        .authenticationEntryPoint(customAuthenticationEntryPoint))
+                .exceptionHandling(
+                        exceptions -> exceptions
+                                .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint()) //401
+                                .accessDeniedHandler(new BearerTokenAccessDeniedHandler()))
                 .formLogin(f -> f.disable())
-                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))//403
+        ;
         return http.build();
     }
     private SecretKey getSecretKey() {
@@ -61,10 +72,12 @@ public class SecurityConfiguration {
         return new SecretKeySpec(keyBytes, 0, keyBytes.length,
                 SecurityUtil.JWT_ALGORITHM.getName());
     }
+//    Dung de tao token
     @Bean
     public JwtEncoder jwtEncoder() {
         return new NimbusJwtEncoder(new ImmutableSecret<>(getSecretKey()));
     }
+//    Dung de giai mai token
     @Bean
     public JwtDecoder jwtDecoder() {
         NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withSecretKey(
@@ -78,8 +91,16 @@ public class SecurityConfiguration {
             }
         };
     }
+//    Dung de phan quyen
+    @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        grantedAuthoritiesConverter.setAuthorityPrefix("");
+        grantedAuthoritiesConverter.setAuthoritiesClaimName("thai");
 
-
-
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
+        return jwtAuthenticationConverter;
+    }
 }
 
