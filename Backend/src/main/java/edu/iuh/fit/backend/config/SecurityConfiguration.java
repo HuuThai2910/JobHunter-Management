@@ -56,12 +56,16 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/login").permitAll()
                         .anyRequest().authenticated())
+//              Dùng để handle lỗi 401 khi token sai hoặc token hết hạn
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())
                         .authenticationEntryPoint(customAuthenticationEntryPoint))
+//              Dùng để handle:
+//              - 401 khi chưa có token hoặc không gửi token
+//              - 403 khi có token hợp lệ nhưng không đủ quyền truy cập
                 .exceptionHandling(
                         exceptions -> exceptions
                                 .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint()) //401
-                                .accessDeniedHandler(new BearerTokenAccessDeniedHandler()))
+                                .accessDeniedHandler(new BearerTokenAccessDeniedHandler())) //403
                 .formLogin(f -> f.disable())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))//403
         ;
