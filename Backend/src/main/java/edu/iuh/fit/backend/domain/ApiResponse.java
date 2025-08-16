@@ -27,7 +27,7 @@ public class ApiResponse<T> {
     private Object message;
     private T data;
     private String errorCode;
-    private LocalDateTime timestamp;
+    private LocalDateTime timestamp = LocalDateTime.now();
 
     public ApiResponse(int status, Object message, T data, String errorCode) {
         this.status = status;
