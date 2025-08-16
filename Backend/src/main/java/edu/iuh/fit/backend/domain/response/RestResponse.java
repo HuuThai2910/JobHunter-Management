@@ -2,10 +2,9 @@
  * @ (#) .java    1.0
  * Copyright (c)  IUH. All rights reserved.
  */
-package edu.iuh.fit.backend.domain;
+package edu.iuh.fit.backend.domain.response;
 
 import lombok.*;
-import org.springframework.web.bind.annotation.GetMapping;
 
 /*
  * @description

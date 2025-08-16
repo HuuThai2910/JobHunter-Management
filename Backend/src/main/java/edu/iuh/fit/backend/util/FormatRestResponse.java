@@ -4,8 +4,8 @@
  */
 package edu.iuh.fit.backend.util;
 
-import edu.iuh.fit.backend.domain.ApiResponse;
-import edu.iuh.fit.backend.domain.RestResponse;
+import edu.iuh.fit.backend.domain.response.ApiResponse;
+import edu.iuh.fit.backend.domain.response.RestResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;

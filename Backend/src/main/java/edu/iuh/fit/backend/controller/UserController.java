@@ -4,12 +4,11 @@
  */
 package edu.iuh.fit.backend.controller;
 
-import edu.iuh.fit.backend.domain.ApiResponse;
+import edu.iuh.fit.backend.domain.response.ApiResponse;
 import edu.iuh.fit.backend.domain.User;
 import edu.iuh.fit.backend.service.UserService;
 import edu.iuh.fit.backend.service.impl.UserServiceImpl;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -2,13 +2,12 @@
  * @ (#) .java    1.0
  * Copyright (c)  IUH. All rights reserved.
  */
-package edu.iuh.fit.backend.domain;
+package edu.iuh.fit.backend.domain.response;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 

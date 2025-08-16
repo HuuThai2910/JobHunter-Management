@@ -4,7 +4,6 @@
  */
 package edu.iuh.fit.backend.controller;
 
-import edu.iuh.fit.backend.domain.RestResponse;
 import edu.iuh.fit.backend.domain.dto.LoginDTO;
 import edu.iuh.fit.backend.domain.dto.ResLoginDTO;
 import edu.iuh.fit.backend.util.SecurityUtil;
