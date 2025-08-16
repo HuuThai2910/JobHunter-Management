@@ -56,6 +56,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/login").permitAll()
                         .anyRequest().authenticated())
+//                Dung de goi ra CORS filter
+                .cors(Customizer.withDefaults())
 //              Dung de them filter BearerTokenAuthentication de decode
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())
 //                        Dùng để handle lỗi 401 khi token sai hoặc token hết hạn
