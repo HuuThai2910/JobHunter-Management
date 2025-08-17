@@ -10,6 +10,8 @@ package edu.iuh.fit.backend.service;/*
  */
 
 import edu.iuh.fit.backend.domain.Company;
+import edu.iuh.fit.backend.domain.dto.ResultPaginationDTO;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +19,7 @@ import java.util.Optional;
 public interface CompanyService {
     Company handleCreateCompany(Company company);
 
-    List<Company> handleGetAllCompanies();
+    ResultPaginationDTO handleGetAllCompanies(Pageable pageable);
 
     Company handleGetCompanyById(Long id);
 

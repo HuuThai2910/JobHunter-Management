@@ -5,9 +5,13 @@
 package edu.iuh.fit.backend.service.impl;
 
 import edu.iuh.fit.backend.domain.Company;
+import edu.iuh.fit.backend.domain.dto.Meta;
+import edu.iuh.fit.backend.domain.dto.ResultPaginationDTO;
 import edu.iuh.fit.backend.repository.CompanyRepository;
 import edu.iuh.fit.backend.service.CompanyService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,8 +35,17 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public List<Company> handleGetAllCompanies(){
-        return this.companyRepository.findAll();
+    public ResultPaginationDTO handleGetAllCompanies(Pageable pageable){
+        Page<Company> companyPage = this.companyRepository.findAll(pageable);
+        ResultPaginationDTO rs = new ResultPaginationDTO();
+        Meta meta = new Meta();
+        meta.setPage(companyPage.getNumber());
+        meta.setPageSize(companyPage.getSize());
+        meta.setPages(companyPage.getTotalPages());
+        meta.setTotal(companyPage.getTotalElements());
+        rs.setMeta(meta);
+        rs.setResult(companyPage.getContent());
+        return rs;
     }
 
     @Override
