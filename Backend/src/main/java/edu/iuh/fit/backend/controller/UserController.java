@@ -36,9 +36,6 @@ public class UserController {
 
     @PostMapping("/users")
     public ResponseEntity<ApiResponse<User>> createUser(@RequestBody @Valid User user) {
-//        Hash password
-//        Alo
-//        Sfs
         String hashPassword = this.passwordEncoder.encode(user.getPassword());
         user.setPassword(hashPassword);
         User created = userService.createUser(user);

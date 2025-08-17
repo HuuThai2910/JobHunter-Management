@@ -4,7 +4,10 @@
  */
 package edu.iuh.fit.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import edu.iuh.fit.backend.util.SecurityUtil;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.annotations.Columns;
 
@@ -28,6 +31,7 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotBlank(message = "Company name cannot be blank")
     private String name;
 
     @Column(columnDefinition = "MEDIUMTEXT")
@@ -37,6 +41,7 @@ public class Company {
 
     private String logo;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
     private Instant createdAt;
 
     private Instant updatedAt;
@@ -44,4 +49,13 @@ public class Company {
     private String createdBy;
 
     private String updatedBy;
+
+//    Ham them nguoi tao company truoc save company
+    @PrePersist
+    public void handleBeforCreate(){
+        this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
+                ? SecurityUtil.getCurrentUserLogin().get()
+                : "";
+        this.createdAt = Instant.now();
+    }
 }
