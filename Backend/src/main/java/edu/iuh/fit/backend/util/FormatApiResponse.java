@@ -6,6 +6,7 @@ package edu.iuh.fit.backend.util;
 
 import edu.iuh.fit.backend.domain.response.ApiResponse;
 import edu.iuh.fit.backend.domain.response.RestResponse;
+import edu.iuh.fit.backend.util.anotaion.ApiMessage;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -22,7 +23,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
  * @version: 1.0
  */
 @RestControllerAdvice
-public class FormatRestResponse implements ResponseBodyAdvice<Object> {
+public class FormatApiResponse implements ResponseBodyAdvice<Object> {
 
     @Override
     public boolean supports(MethodParameter returnType, Class converterType) {
@@ -47,7 +48,8 @@ public class FormatRestResponse implements ResponseBodyAdvice<Object> {
             return body;
         }else {
             res.setData(body);
-            res.setMessage("CALL API SUCCESS");
+            ApiMessage message = returnType.getMethodAnnotation(ApiMessage.class);
+            res.setMessage(message != null ? message.value() : "CALL API SUCCESS");
         }
         return res;
     }

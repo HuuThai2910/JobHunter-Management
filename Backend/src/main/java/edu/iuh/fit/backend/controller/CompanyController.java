@@ -9,6 +9,7 @@ import edu.iuh.fit.backend.domain.Company;
 import edu.iuh.fit.backend.domain.dto.ResultPaginationDTO;
 import edu.iuh.fit.backend.service.CompanyService;
 import edu.iuh.fit.backend.service.impl.CompanyServiceImpl;
+import edu.iuh.fit.backend.util.anotaion.ApiMessage;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,29 +37,34 @@ public class CompanyController {
     }
 
     @PostMapping("/companies")
-    public ResponseEntity<Company> createUser(@RequestBody @Valid Company company){
+    @ApiMessage("Create company successfully")
+    public ResponseEntity<Company> createCompany(@RequestBody @Valid Company company){
         Company newCompany = this.companyService.handleCreateCompany(company);
         return ResponseEntity.status(HttpStatus.CREATED).body(newCompany);
     }
 
     @GetMapping("/companies")
+    @ApiMessage("Fetch all companies")
     public ResponseEntity<ResultPaginationDTO> getAllCompanies(@Filter Specification<Company> specification,Pageable pageable){
         return ResponseEntity.ok(this.companyService.handleGetAllCompanies(specification, pageable));
     }
 
     @GetMapping("/companies/{id}")
+    @ApiMessage("Fetch company")
     public ResponseEntity<Company> getCompanyById(@PathVariable Long id){
         Company company = this.companyService.handleGetCompanyById(id);
         return ResponseEntity.ok(company);
     }
 
     @PutMapping("/companies")
+    @ApiMessage("Update company successfully")
     public ResponseEntity<Company> updateCompany(@RequestBody @Valid Company updatedCompany){
         Company company = this.companyService.handleUpdateCompany(updatedCompany);
         return ResponseEntity.ok(company);
     }
 
     @DeleteMapping("/companies/{id}")
+    @ApiMessage("Delete company successfully")
     public ResponseEntity<Void> deleteCompany(@PathVariable Long id){
         this.companyService.handleDeletCompany(id);
         return ResponseEntity.ok(null);
