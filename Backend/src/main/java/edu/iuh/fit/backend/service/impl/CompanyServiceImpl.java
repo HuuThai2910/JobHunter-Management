@@ -12,6 +12,7 @@ import edu.iuh.fit.backend.service.CompanyService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,12 +36,12 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public ResultPaginationDTO handleGetAllCompanies(Pageable pageable){
-        Page<Company> companyPage = this.companyRepository.findAll(pageable);
+    public ResultPaginationDTO handleGetAllCompanies(Specification<Company> specification, Pageable pageable){
+        Page<Company> companyPage = this.companyRepository.findAll(specification, pageable);
         ResultPaginationDTO rs = new ResultPaginationDTO();
         Meta meta = new Meta();
-        meta.setPage(companyPage.getNumber());
-        meta.setPageSize(companyPage.getSize());
+        meta.setPage(pageable.getPageNumber() + 1);
+        meta.setPageSize(pageable.getPageSize());
         meta.setPages(companyPage.getTotalPages());
         meta.setTotal(companyPage.getTotalElements());
         rs.setMeta(meta);
