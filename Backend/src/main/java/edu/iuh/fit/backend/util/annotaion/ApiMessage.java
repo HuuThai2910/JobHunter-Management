@@ -2,7 +2,7 @@
  * @ (#) .java    1.0
  * Copyright (c)  IUH. All rights reserved.
  */
-package edu.iuh.fit.backend.util.anotaion;
+package edu.iuh.fit.backend.util.annotaion;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -9,17 +9,13 @@ import edu.iuh.fit.backend.domain.Company;
 import edu.iuh.fit.backend.domain.dto.ResultPaginationDTO;
 import edu.iuh.fit.backend.service.CompanyService;
 import edu.iuh.fit.backend.service.impl.CompanyServiceImpl;
-import edu.iuh.fit.backend.util.anotaion.ApiMessage;
+import edu.iuh.fit.backend.util.annotaion.ApiMessage;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 /*
  * @description
@@ -28,6 +24,7 @@ import java.util.Optional;
  * @version: 1.0
  */
 @RestController
+@RequestMapping("/api/v1")
 public class CompanyController {
 
     private final CompanyService companyService;
