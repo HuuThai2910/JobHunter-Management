@@ -4,6 +4,8 @@
  */
 package edu.iuh.fit.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import edu.iuh.fit.backend.util.SecurityUtil;
 import edu.iuh.fit.backend.util.constant.Gender;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -45,8 +47,31 @@ public class User {
     private Gender gender;
     private String address;
     private String refreshToken;
+
+
     private Instant createAt;
+
+
     private Instant updatedAt;
     private String createBy;
     private String updatedBy;
+
+//    Ham them nguoi tao user truoc khi save user
+    @PrePersist
+    public void handleBeforeCreate(){
+        this.createBy = SecurityUtil.getCurrentUserLogin().isPresent()
+                ? SecurityUtil.getCurrentUserLogin().get()
+                : "";
+        this.createAt = Instant.now();
+    }
+
+//    Ham them nguoi cap nhat user
+    @PreUpdate
+    public void handleBeforeUpdate(){
+        this.updatedBy = SecurityUtil.getCurrentUserLogin().isPresent()
+                ? SecurityUtil.getCurrentUserLogin().get()
+                : "";
+        this.updatedAt = Instant.now();
+    }
+
 }

@@ -4,6 +4,9 @@
  */
 package edu.iuh.fit.backend.controller;
 
+import edu.iuh.fit.backend.domain.dto.ResCreateUserDTO;
+import edu.iuh.fit.backend.domain.dto.ResUpdateUserDTO;
+import edu.iuh.fit.backend.domain.dto.ResUserDTO;
 import edu.iuh.fit.backend.domain.response.ApiResponse;
 import edu.iuh.fit.backend.domain.User;
 import edu.iuh.fit.backend.service.UserService;
@@ -36,35 +39,31 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<ApiResponse<User>> createUser(@RequestBody @Valid User user) {
+    public ResponseEntity<ApiResponse<ResCreateUserDTO>> createUser(@RequestBody @Valid User user) {
         String hashPassword = this.passwordEncoder.encode(user.getPassword());
         user.setPassword(hashPassword);
-        User created = userService.createUser(user);
-        var result = new ApiResponse<>(HttpStatus.CREATED.value(), "createUser", created, null);
+        ResCreateUserDTO dto = this.userService.createUser(user);
+        var result = new ApiResponse<>(HttpStatus.CREATED.value(), "createUser", dto, null);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     @GetMapping("/users")
-    public ResponseEntity<ApiResponse<List<User>>> getAllUsers() {
-        var result = new ApiResponse<>(HttpStatus.OK.value(), "getAllUsers", userService.getAllUsers(), null);
+    public ResponseEntity<ApiResponse<List<ResUserDTO>>> getAllUsers() {
+        List<ResUserDTO> resUserDTOS = this.userService.getAllUsers();
+        var result = new ApiResponse<>(HttpStatus.OK.value(), "getAllUsers", resUserDTOS, null);
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<ApiResponse<User>> getUserById(@PathVariable Long id) {
-        return userService.getUserById(id).map(user -> {
-            var response = new ApiResponse<>(HttpStatus.OK.value(), "getUserById", user, null);
-            return ResponseEntity.ok(response);
-        }).orElseGet(() -> {
-            ApiResponse<User> errorResponse = new ApiResponse<>(HttpStatus.NOT_FOUND.value(),
-                    "Không tìm thấy user với ID: " + id, null, "USER_NOT_FOUND");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-        });
+    public ResponseEntity<ApiResponse<ResUserDTO>> getUserById(@PathVariable Long id) {
+        ResUserDTO resUserDTO = this.userService.getUserById(id);
+        var response = new ApiResponse<>(HttpStatus.OK.value(), "getUserById", resUserDTO, null);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<ApiResponse<User>> updateUser(@PathVariable Long id, @RequestBody User user) {
-        User updated = userService.updateUser(id, user);
+    public ResponseEntity<ApiResponse<ResUpdateUserDTO>> updateUser(@PathVariable Long id, @RequestBody User user) {
+        ResUpdateUserDTO updated = userService.updateUser(id, user);
         var result = new ApiResponse<>(HttpStatus.CREATED.value(), "updateUser", updated, null);
         return ResponseEntity.ok(result);
     }

@@ -5,13 +5,17 @@
 package edu.iuh.fit.backend.service.impl;
 
 import edu.iuh.fit.backend.domain.User;
+import edu.iuh.fit.backend.domain.dto.ResCreateUserDTO;
+import edu.iuh.fit.backend.domain.dto.ResUpdateUserDTO;
+import edu.iuh.fit.backend.domain.dto.ResUserDTO;
+import edu.iuh.fit.backend.mapper.UserMapper;
 import edu.iuh.fit.backend.repository.UserRepository;
 import edu.iuh.fit.backend.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 /*
  * @description
@@ -20,37 +24,42 @@ import java.util.Optional;
  * @version: 1.0
  */
 @Service
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final UserMapper userMapper;
 
     @Override
-    public User createUser(User user) {
+    public ResCreateUserDTO createUser(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
-        return userRepository.save(user);
+        User newUser = this.userRepository.save(user);
+        return this.userMapper.toResCreateUserDTO(newUser);
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<ResUserDTO> getAllUsers() {
+        List<User> users =  userRepository.findAll();
+        return this.userMapper.toResListUserDTO(users);
     }
 
     @Override
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
+    public ResUserDTO getUserById(Long id) {
+        User user = this.userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
+        return this.userMapper.toResUserDTO(user);
     }
 
     @Override
-    public User updateUser(Long id, User updatedUser) {
-        return userRepository.findById(id).map(user -> {
+    public ResUpdateUserDTO updateUser(Long id, User updatedUser) {
+        return this.userRepository.findById(id).map(user -> {
             user.setName(updatedUser.getName());
-            user.setEmail(updatedUser.getEmail());
-            return userRepository.save(user);
+            user.setGender(updatedUser.getGender());
+            user.setAddress(updatedUser.getAddress());
+            user.setAge(updatedUser.getAge());
+            User currentUser = this.userRepository.save(user);
+            return this.userMapper.toResUpdateUserDTO(currentUser);
         }).orElseThrow(() -> new NoSuchElementException("User not found"));
     }
 
@@ -65,5 +74,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByUserName(String userName) {
         return this.userRepository.findByEmail(userName);
+    }
+
+    @Override
+    public ResCreateUserDTO convertToResCreateUserDTO(User user) {
+        ResCreateUserDTO resCreateUserDTO = new ResCreateUserDTO();
+        resCreateUserDTO.setId(user.getId());
+        resCreateUserDTO.setName(user.getName());
+        resCreateUserDTO.setEmail(user.getEmail());
+        resCreateUserDTO.setAge(user.getAge());
+        resCreateUserDTO.setGender(user.getGender());
+        resCreateUserDTO.setAddress(user.getAddress());
+        resCreateUserDTO.setCreateAt(user.getCreateAt());
+        return resCreateUserDTO;
     }
 }

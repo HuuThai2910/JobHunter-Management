@@ -5,12 +5,11 @@
 package edu.iuh.fit.backend.service;
 
 import edu.iuh.fit.backend.domain.User;
-import edu.iuh.fit.backend.repository.UserRepository;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
+import edu.iuh.fit.backend.domain.dto.ResCreateUserDTO;
+import edu.iuh.fit.backend.domain.dto.ResUpdateUserDTO;
+import edu.iuh.fit.backend.domain.dto.ResUserDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 /*
  * @description
@@ -19,15 +18,17 @@ import java.util.Optional;
  * @version: 1.0
  */
 public interface UserService {
-    User createUser(User user);
+    ResCreateUserDTO createUser(User user);
 
-    List<User> getAllUsers();
+    List<ResUserDTO> getAllUsers();
 
-    Optional<User> getUserById(Long id);
+    ResUserDTO getUserById(Long id);
 
-    User updateUser(Long id, User updatedUser);
+    ResUpdateUserDTO updateUser(Long id, User updatedUser);
 
     void deleteUser(Long id);
 
     User getUserByUserName(String userName);
+
+    ResCreateUserDTO convertToResCreateUserDTO(User user);
 }
