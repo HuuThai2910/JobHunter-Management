@@ -8,8 +8,9 @@ import edu.iuh.fit.backend.domain.User;
 import edu.iuh.fit.backend.domain.dto.ResCreateUserDTO;
 import edu.iuh.fit.backend.domain.dto.ResUpdateUserDTO;
 import edu.iuh.fit.backend.domain.dto.ResUserDTO;
-
-import java.util.List;
+import edu.iuh.fit.backend.domain.dto.ResultPaginationDTO;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 /*
  * @description
@@ -20,7 +21,7 @@ import java.util.List;
 public interface UserService {
     ResCreateUserDTO createUser(User user);
 
-    List<ResUserDTO> getAllUsers();
+    ResultPaginationDTO getAllUsers(Specification<User> specification, Pageable pageable);
 
     ResUserDTO getUserById(Long id);
 

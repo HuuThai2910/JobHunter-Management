@@ -4,14 +4,16 @@
  */
 package edu.iuh.fit.backend.service.impl;
 
+import edu.iuh.fit.backend.domain.Company;
 import edu.iuh.fit.backend.domain.User;
-import edu.iuh.fit.backend.domain.dto.ResCreateUserDTO;
-import edu.iuh.fit.backend.domain.dto.ResUpdateUserDTO;
-import edu.iuh.fit.backend.domain.dto.ResUserDTO;
+import edu.iuh.fit.backend.domain.dto.*;
 import edu.iuh.fit.backend.mapper.UserMapper;
 import edu.iuh.fit.backend.repository.UserRepository;
 import edu.iuh.fit.backend.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,9 +41,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<ResUserDTO> getAllUsers() {
-        List<User> users =  userRepository.findAll();
-        return this.userMapper.toResListUserDTO(users);
+    public ResultPaginationDTO getAllUsers(Specification<User> specification, Pageable pageable) {
+        Page<User> companyPage =  userRepository.findAll(specification, pageable);
+        ResultPaginationDTO rs = new ResultPaginationDTO();
+        Meta meta = new Meta();
+        meta.setPage(pageable.getPageNumber() + 1);
+        meta.setPageSize(pageable.getPageSize());
+        meta.setPages(companyPage.getTotalPages());
+        meta.setTotal(companyPage.getTotalElements());
+        rs.setMeta(meta);
+        rs.setResult(this.userMapper.toResListUserDTO(companyPage.getContent()));
+        return rs;
     }
 
     @Override

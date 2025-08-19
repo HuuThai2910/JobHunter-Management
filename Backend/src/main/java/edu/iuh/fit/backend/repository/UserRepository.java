@@ -6,6 +6,7 @@ package edu.iuh.fit.backend.repository;
 
 import edu.iuh.fit.backend.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 /*
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Repository;
  * @version: 1.0
  */
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
     boolean existsByEmail(String email);
 
     User findByEmail(String userName);

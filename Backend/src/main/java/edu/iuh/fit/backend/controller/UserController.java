@@ -4,14 +4,18 @@
  */
 package edu.iuh.fit.backend.controller;
 
+import com.turkraft.springfilter.boot.Filter;
 import edu.iuh.fit.backend.domain.dto.ResCreateUserDTO;
 import edu.iuh.fit.backend.domain.dto.ResUpdateUserDTO;
 import edu.iuh.fit.backend.domain.dto.ResUserDTO;
+import edu.iuh.fit.backend.domain.dto.ResultPaginationDTO;
 import edu.iuh.fit.backend.domain.response.ApiResponse;
 import edu.iuh.fit.backend.domain.User;
 import edu.iuh.fit.backend.service.UserService;
 import edu.iuh.fit.backend.service.impl.UserServiceImpl;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -48,9 +52,9 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<ApiResponse<List<ResUserDTO>>> getAllUsers() {
-        List<ResUserDTO> resUserDTOS = this.userService.getAllUsers();
-        var result = new ApiResponse<>(HttpStatus.OK.value(), "getAllUsers", resUserDTOS, null);
+    public ResponseEntity<ApiResponse<ResultPaginationDTO>> getAllUsers(@Filter Specification<User> specification, Pageable pageable) {
+        ResultPaginationDTO resultPaginationDTO = this.userService.getAllUsers(specification, pageable);
+        var result = new ApiResponse<>(HttpStatus.OK.value(), "getAllUsers", resultPaginationDTO, null);
         return ResponseEntity.ok(result);
     }
 
