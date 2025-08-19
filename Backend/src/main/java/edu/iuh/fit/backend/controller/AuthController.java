@@ -4,8 +4,10 @@
  */
 package edu.iuh.fit.backend.controller;
 
+import edu.iuh.fit.backend.domain.User;
 import edu.iuh.fit.backend.domain.dto.LoginDTO;
 import edu.iuh.fit.backend.domain.dto.ResLoginDTO;
+import edu.iuh.fit.backend.service.UserService;
 import edu.iuh.fit.backend.util.SecurityUtil;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -31,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final SecurityUtil securityUtil;
+    private final UserService userService;
     @PostMapping("/login")
     public ResponseEntity<ResLoginDTO> login(@RequestBody @Valid LoginDTO loginDTO){
         //Nạp input gồm username/password vào Security
@@ -45,6 +48,9 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         ResLoginDTO res = new ResLoginDTO();
+        User currentUser = this.userService.getUserByUserName(loginDTO.getUserName());
+        ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(currentUser.getId(), currentUser.getEmail(), currentUser.getName());
+        res.setUserLogin(userLogin);
         res.setAccessToken(access_token);
         return ResponseEntity.ok().body(res);
     }

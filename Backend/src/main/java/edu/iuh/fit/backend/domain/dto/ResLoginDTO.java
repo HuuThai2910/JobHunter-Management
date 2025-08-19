@@ -21,4 +21,15 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ResLoginDTO {
     private String accessToken;
+    private UserLogin userLogin;
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class UserLogin{
+        private long id;
+        private String email;
+        private String name;
+    }
 }
