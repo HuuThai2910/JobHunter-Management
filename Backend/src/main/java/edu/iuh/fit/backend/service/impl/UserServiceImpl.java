@@ -4,7 +4,6 @@
  */
 package edu.iuh.fit.backend.service.impl;
 
-import edu.iuh.fit.backend.domain.Company;
 import edu.iuh.fit.backend.domain.User;
 import edu.iuh.fit.backend.domain.dto.*;
 import edu.iuh.fit.backend.mapper.UserMapper;
@@ -16,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 
 /*
@@ -87,15 +85,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResCreateUserDTO convertToResCreateUserDTO(User user) {
-        ResCreateUserDTO resCreateUserDTO = new ResCreateUserDTO();
-        resCreateUserDTO.setId(user.getId());
-        resCreateUserDTO.setName(user.getName());
-        resCreateUserDTO.setEmail(user.getEmail());
-        resCreateUserDTO.setAge(user.getAge());
-        resCreateUserDTO.setGender(user.getGender());
-        resCreateUserDTO.setAddress(user.getAddress());
-        resCreateUserDTO.setCreateAt(user.getCreateAt());
-        return resCreateUserDTO;
+    public void updateUserToken(String token, String email) {
+        User currentUser = this.getUserByUserName(email);
+        if(currentUser != null){
+            currentUser.setRefreshToken(token);
+            this.userRepository.save(currentUser);
+        }
     }
+
+
 }

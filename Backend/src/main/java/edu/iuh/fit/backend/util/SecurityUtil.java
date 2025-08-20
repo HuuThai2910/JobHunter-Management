@@ -5,6 +5,7 @@
 package edu.iuh.fit.backend.util;
 
 import com.nimbusds.jose.util.Base64;
+import edu.iuh.fit.backend.domain.dto.ResLoginDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -36,17 +37,21 @@ public class SecurityUtil {
     public static final MacAlgorithm JWT_ALGORITHM = MacAlgorithm.HS512;
     @Value("${thai.jwt.base64-secret}")
     private String jwtKey;
-    @Value("${thai.jwt.token-validity-in-seconds}")
-    private long jwtKeyExpiration;
+
+    @Value("${thai.jwt.access-token-validity-in-seconds}")
+    private long accessTokenExpiration;
+
+    @Value("${thai.jwt.refresh-token-validity-in-seconds}")
+    private long refreshTokenExpiration;
 
     public SecurityUtil(JwtEncoder jwtEncoder) {
         this.jwtEncoder = jwtEncoder;
     }
 
 
-    public String createToken(Authentication authentication) {
+    public String createAccessToken(Authentication authentication) {
         Instant now = Instant.now();
-        Instant validity = now.plus(this.jwtKeyExpiration, ChronoUnit.SECONDS);
+        Instant validity = now.plus(this.accessTokenExpiration, ChronoUnit.SECONDS);
 
         // @formatter:off
         JwtClaimsSet claims = JwtClaimsSet.builder()
@@ -54,6 +59,21 @@ public class SecurityUtil {
                 .expiresAt(validity)
                 .subject(authentication.getName())
                 .claim("thai", authentication)
+                .build();
+
+        JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
+        return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
+    }
+    public String createRefreshToken(String email, ResLoginDTO resLoginDTO) {
+        Instant now = Instant.now();
+        Instant validity = now.plus(this.refreshTokenExpiration, ChronoUnit.SECONDS);
+
+        // @formatter:off
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuedAt(now)
+                .expiresAt(validity)
+                .subject(email)
+                .claim("user", resLoginDTO.getUserLogin())
                 .build();
 
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();

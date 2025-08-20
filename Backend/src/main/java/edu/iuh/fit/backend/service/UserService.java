@@ -31,5 +31,6 @@ public interface UserService {
 
     User getUserByUserName(String userName);
 
-    ResCreateUserDTO convertToResCreateUserDTO(User user);
+
+    void updateUserToken(String token, String email);
 }

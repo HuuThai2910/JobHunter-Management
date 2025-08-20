@@ -11,6 +11,9 @@ import edu.iuh.fit.backend.service.UserService;
 import edu.iuh.fit.backend.util.SecurityUtil;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -28,12 +31,20 @@ import org.springframework.web.bind.annotation.RestController;
  * @version: 1.0
  */
 @RestController
-@AllArgsConstructor
 @RequestMapping("/api/v1")
 public class AuthController {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final SecurityUtil securityUtil;
     private final UserService userService;
+    @Value("${thai.jwt.refresh-token-validity-in-seconds}")
+    private Long refreshTokenExpiration;
+
+    public AuthController(AuthenticationManagerBuilder authenticationManagerBuilder, SecurityUtil securityUtil, UserService userService) {
+        this.authenticationManagerBuilder = authenticationManagerBuilder;
+        this.securityUtil = securityUtil;
+        this.userService = userService;
+    }
+
     @PostMapping("/login")
     public ResponseEntity<ResLoginDTO> login(@RequestBody @Valid LoginDTO loginDTO){
         //Nạp input gồm username/password vào Security
@@ -44,7 +55,7 @@ public class AuthController {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
 //        Create a token
-        String access_token = this.securityUtil.createToken(authentication);
+        String access_token = this.securityUtil.createAccessToken(authentication);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         ResLoginDTO res = new ResLoginDTO();
@@ -52,6 +63,21 @@ public class AuthController {
         ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(currentUser.getId(), currentUser.getEmail(), currentUser.getName());
         res.setUserLogin(userLogin);
         res.setAccessToken(access_token);
-        return ResponseEntity.ok().body(res);
+
+//        Create refresh token
+        String refresh_token = this.securityUtil.createRefreshToken(loginDTO.getUserName(), res);
+//        Update user
+        this.userService.updateUserToken(refresh_token, loginDTO.getUserName());
+
+//        Set cookies
+        ResponseCookie responseCookie = ResponseCookie.from("refresh_token", refresh_token)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(refreshTokenExpiration)
+                .build();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .body(res);
     }
 }
