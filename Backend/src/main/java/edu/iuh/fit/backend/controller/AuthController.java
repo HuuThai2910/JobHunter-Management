@@ -9,6 +9,7 @@ import edu.iuh.fit.backend.domain.dto.LoginDTO;
 import edu.iuh.fit.backend.domain.dto.ResLoginDTO;
 import edu.iuh.fit.backend.service.UserService;
 import edu.iuh.fit.backend.util.SecurityUtil;
+import edu.iuh.fit.backend.util.annotaion.ApiMessage;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,10 +20,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /*
  * @description
@@ -45,7 +43,8 @@ public class AuthController {
         this.userService = userService;
     }
 
-    @PostMapping("/login")
+    @PostMapping("/auth/login")
+    @ApiMessage("Login successfully")
     public ResponseEntity<ResLoginDTO> login(@RequestBody @Valid LoginDTO loginDTO){
         //Nạp input gồm username/password vào Security
         UsernamePasswordAuthenticationToken authenticationToken
@@ -53,15 +52,14 @@ public class AuthController {
 
         //xác thực người dùng => cần viết hàm loadUserByUsername
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
-//        Create a token
-        String access_token = this.securityUtil.createAccessToken(authentication);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         ResLoginDTO res = new ResLoginDTO();
         User currentUser = this.userService.getUserByUserName(loginDTO.getUserName());
         ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(currentUser.getId(), currentUser.getEmail(), currentUser.getName());
         res.setUserLogin(userLogin);
+//        Create a token
+        String access_token = this.securityUtil.createAccessToken(authentication, res);
         res.setAccessToken(access_token);
 
 //        Create refresh token
@@ -79,5 +77,17 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                 .body(res);
+    }
+    @GetMapping("/auth/account")
+    @ApiMessage("fetch account")
+    public ResponseEntity<ResLoginDTO.UserLogin> getAccount(){
+        String email = SecurityUtil.getCurrentUserLogin().isPresent()
+                ? SecurityUtil.getCurrentUserLogin().get()
+                : "";
+        User currentUser = this.userService.getUserByUserName(email);
+        ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(currentUser.getId(),
+                currentUser.getEmail(),
+                currentUser.getName());
+        return ResponseEntity.ok().body(userLogin);
     }
 }
