@@ -131,4 +131,25 @@ public class AuthController {
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                 .body(res);
     }
+    @PostMapping("/auth/logout")
+    @ApiMessage("Logout successfully")
+    public ResponseEntity<Void> getLogout(){
+        String email = SecurityUtil.getCurrentUserLogin().isPresent()
+                ? SecurityUtil.getCurrentUserLogin().get()
+                : "";
+
+        this.userService.updateUserToken(null, email);
+        ResponseCookie deleteCookie = ResponseCookie
+                .from("refresh_token", null)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(0)
+                .build();
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.SET_COOKIE, deleteCookie.toString())
+                .build();
+
+    }
 }
