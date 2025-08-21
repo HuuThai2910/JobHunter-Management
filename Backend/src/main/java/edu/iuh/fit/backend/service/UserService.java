@@ -33,4 +33,6 @@ public interface UserService {
 
 
     void updateUserToken(String token, String email);
+
+    User getUserByRefreshTokenAndEmail(String token, String email);
 }
