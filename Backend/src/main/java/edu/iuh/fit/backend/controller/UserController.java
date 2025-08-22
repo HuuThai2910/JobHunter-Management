@@ -21,8 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 /*
  * @description
  * @author: Huu Thai
@@ -65,9 +63,9 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/users/{id}")
-    public ResponseEntity<ApiResponse<ResUpdateUserDTO>> updateUser(@PathVariable Long id, @RequestBody User user) {
-        ResUpdateUserDTO updated = userService.updateUser(id, user);
+    @PutMapping("/users")
+    public ResponseEntity<ApiResponse<ResUpdateUserDTO>> updateUser(@RequestBody User user) {
+        ResUpdateUserDTO updated = userService.updateUser(user);
         var result = new ApiResponse<>(HttpStatus.CREATED.value(), "updateUser", updated, null);
         return ResponseEntity.ok(result);
     }

@@ -60,8 +60,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResUpdateUserDTO updateUser(Long id, User updatedUser) {
-        return this.userRepository.findById(id).map(user -> {
+    public ResUpdateUserDTO updateUser(User updatedUser) {
+        return this.userRepository.findById(updatedUser.getId()).map(user -> {
             user.setName(updatedUser.getName());
             user.setGender(updatedUser.getGender());
             user.setAddress(updatedUser.getAddress());

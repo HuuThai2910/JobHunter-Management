@@ -22,7 +22,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     // Map User -> ResCreateUserDTO
-    @Mapping(target = "createAt", source = "createAt")
+    @Mapping(target = "createdAt", source = "createdAt")
     ResCreateUserDTO toResCreateUserDTO(User user);
 
     // Map User -> ResUpdateUserDTO

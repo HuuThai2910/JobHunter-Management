@@ -29,6 +29,6 @@ public class ResUpdateUserDTO {
     private int age;
     private Gender gender;
     private String address;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
-    private Instant updateAt;
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
+    private Instant updatedAt;
 }

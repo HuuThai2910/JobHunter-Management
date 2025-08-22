@@ -22,14 +22,14 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 public class ApiResponse<T> {
-    private int status;
+    private int statusCode;
     private Object message;
     private T data;
     private String errorCode;
     private LocalDateTime timestamp = LocalDateTime.now();
 
-    public ApiResponse(int status, Object message, T data, String errorCode) {
-        this.status = status;
+    public ApiResponse(int statusCode, Object message, T data, String errorCode) {
+        this.statusCode = statusCode;
         this.message = message;
         this.data = data;
         this.errorCode = errorCode;

@@ -48,7 +48,7 @@ public class User {
     private String address;
     @Column(columnDefinition = "MEDIUMTEXT")
     private String refreshToken;
-    private Instant createAt;
+    private Instant createdAt;
     private Instant updatedAt;
     private String createBy;
     private String updatedBy;
@@ -59,7 +59,7 @@ public class User {
         this.createBy = SecurityUtil.getCurrentUserLogin().isPresent()
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
-        this.createAt = Instant.now();
+        this.createdAt = Instant.now();
     }
 
 //    Ham them nguoi cap nhat user
