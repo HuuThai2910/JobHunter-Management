@@ -5,9 +5,9 @@
 package edu.iuh.fit.backend.mapper;
 
 import edu.iuh.fit.backend.domain.User;
-import edu.iuh.fit.backend.domain.dto.ResCreateUserDTO;
-import edu.iuh.fit.backend.domain.dto.ResUpdateUserDTO;
-import edu.iuh.fit.backend.domain.dto.ResUserDTO;
+import edu.iuh.fit.backend.dto.response.CreateUserResponse;
+import edu.iuh.fit.backend.dto.response.UpdateUserResponse;
+import edu.iuh.fit.backend.dto.response.UserResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -23,13 +23,13 @@ import java.util.List;
 public interface UserMapper {
     // Map User -> ResCreateUserDTO
     @Mapping(target = "createdAt", source = "createdAt")
-    ResCreateUserDTO toResCreateUserDTO(User user);
+    CreateUserResponse toResCreateUserDTO(User user);
 
     // Map User -> ResUpdateUserDTO
-    ResUpdateUserDTO toResUpdateUserDTO(User user);
+    UpdateUserResponse toResUpdateUserDTO(User user);
 
     //    Map User -> ResUserDTO
-    ResUserDTO toResUserDTO(User user);
+    UserResponse toResUserDTO(User user);
 
-    List<ResUserDTO> toResListUserDTO(List<User> users);
+    List<UserResponse> toResListUserDTO(List<User> users);
 }

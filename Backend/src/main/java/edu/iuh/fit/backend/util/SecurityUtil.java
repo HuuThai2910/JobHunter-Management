@@ -5,11 +5,9 @@
 package edu.iuh.fit.backend.util;
 
 import com.nimbusds.jose.util.Base64;
-import edu.iuh.fit.backend.domain.dto.ResLoginDTO;
-import lombok.AllArgsConstructor;
+import edu.iuh.fit.backend.dto.response.LoginResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,10 +20,8 @@ import javax.crypto.spec.SecretKeySpec;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 /*
  * @description
@@ -53,7 +49,7 @@ public class SecurityUtil {
 
 
 
-    public String createAccessToken(String email, ResLoginDTO resLoginDTO) {
+    public String createAccessToken(String email, LoginResponse loginResponse) {
         Instant now = Instant.now();
         Instant validity = now.plus(this.accessTokenExpiration, ChronoUnit.SECONDS);
 //        Hard code permission
@@ -66,13 +62,13 @@ public class SecurityUtil {
                 .issuedAt(now)
                 .expiresAt(validity)
                 .subject(email)
-                .claim("user", resLoginDTO.getUserLogin())
+                .claim("user", loginResponse.getUserLogin())
                 .claim("permission", listAuthority)
                 .build();
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
     }
-    public String createRefreshToken(String email, ResLoginDTO resLoginDTO) {
+    public String createRefreshToken(String email, LoginResponse loginResponse) {
         Instant now = Instant.now();
         Instant validity = now.plus(this.refreshTokenExpiration, ChronoUnit.SECONDS);
 
@@ -81,7 +77,7 @@ public class SecurityUtil {
                 .issuedAt(now)
                 .expiresAt(validity)
                 .subject(email)
-                .claim("user", resLoginDTO.getUserLogin())
+                .claim("user", loginResponse.getUserLogin())
                 .build();
 
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();

@@ -6,7 +6,7 @@ package edu.iuh.fit.backend.controller;
 
 import com.turkraft.springfilter.boot.Filter;
 import edu.iuh.fit.backend.domain.Company;
-import edu.iuh.fit.backend.domain.dto.ResultPaginationDTO;
+import edu.iuh.fit.backend.dto.ResultPaginationDTO;
 import edu.iuh.fit.backend.service.CompanyService;
 import edu.iuh.fit.backend.service.impl.CompanyServiceImpl;
 import edu.iuh.fit.backend.util.annotaion.ApiMessage;

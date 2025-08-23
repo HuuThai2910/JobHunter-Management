@@ -4,7 +4,7 @@
  */
 package edu.iuh.fit.backend.util.error;
 
-import edu.iuh.fit.backend.domain.response.ApiResponse;
+import edu.iuh.fit.backend.dto.response.ApiResponse;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

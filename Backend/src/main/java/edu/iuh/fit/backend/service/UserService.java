@@ -5,10 +5,10 @@
 package edu.iuh.fit.backend.service;
 
 import edu.iuh.fit.backend.domain.User;
-import edu.iuh.fit.backend.domain.dto.ResCreateUserDTO;
-import edu.iuh.fit.backend.domain.dto.ResUpdateUserDTO;
-import edu.iuh.fit.backend.domain.dto.ResUserDTO;
-import edu.iuh.fit.backend.domain.dto.ResultPaginationDTO;
+import edu.iuh.fit.backend.dto.response.CreateUserResponse;
+import edu.iuh.fit.backend.dto.response.UpdateUserResponse;
+import edu.iuh.fit.backend.dto.response.UserResponse;
+import edu.iuh.fit.backend.dto.ResultPaginationDTO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -19,13 +19,13 @@ import org.springframework.data.jpa.domain.Specification;
  * @version: 1.0
  */
 public interface UserService {
-    ResCreateUserDTO createUser(User user);
+    CreateUserResponse createUser(User user);
 
     ResultPaginationDTO getAllUsers(Specification<User> specification, Pageable pageable);
 
-    ResUserDTO getUserById(Long id);
+    UserResponse getUserById(Long id);
 
-    ResUpdateUserDTO updateUser(User updatedUser);
+    UpdateUserResponse updateUser(User updatedUser);
 
     void deleteUser(Long id);
 

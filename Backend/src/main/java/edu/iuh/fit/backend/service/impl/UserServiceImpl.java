@@ -5,7 +5,10 @@
 package edu.iuh.fit.backend.service.impl;
 
 import edu.iuh.fit.backend.domain.User;
-import edu.iuh.fit.backend.domain.dto.*;
+import edu.iuh.fit.backend.dto.*;
+import edu.iuh.fit.backend.dto.response.CreateUserResponse;
+import edu.iuh.fit.backend.dto.response.UpdateUserResponse;
+import edu.iuh.fit.backend.dto.response.UserResponse;
 import edu.iuh.fit.backend.mapper.UserMapper;
 import edu.iuh.fit.backend.repository.UserRepository;
 import edu.iuh.fit.backend.service.UserService;
@@ -30,7 +33,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
-    public ResCreateUserDTO createUser(User user) {
+    public CreateUserResponse createUser(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
@@ -53,14 +56,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResUserDTO getUserById(Long id) {
+    public UserResponse getUserById(Long id) {
         User user = this.userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("User not found"));
         return this.userMapper.toResUserDTO(user);
     }
 
     @Override
-    public ResUpdateUserDTO updateUser(User updatedUser) {
+    public UpdateUserResponse updateUser(User updatedUser) {
         return this.userRepository.findById(updatedUser.getId()).map(user -> {
             user.setName(updatedUser.getName());
             user.setGender(updatedUser.getGender());

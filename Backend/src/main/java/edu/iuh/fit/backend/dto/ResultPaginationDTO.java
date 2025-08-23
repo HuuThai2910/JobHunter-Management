@@ -2,7 +2,7 @@
  * @ (#) .java    1.0
  * Copyright (c)  IUH. All rights reserved.
  */
-package edu.iuh.fit.backend.domain.dto;
+package edu.iuh.fit.backend.dto;
 
 import lombok.Getter;
 import lombok.Setter;

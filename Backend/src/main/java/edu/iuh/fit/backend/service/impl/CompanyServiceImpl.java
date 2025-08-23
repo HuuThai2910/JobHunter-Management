@@ -5,8 +5,8 @@
 package edu.iuh.fit.backend.service.impl;
 
 import edu.iuh.fit.backend.domain.Company;
-import edu.iuh.fit.backend.domain.dto.Meta;
-import edu.iuh.fit.backend.domain.dto.ResultPaginationDTO;
+import edu.iuh.fit.backend.dto.Meta;
+import edu.iuh.fit.backend.dto.ResultPaginationDTO;
 import edu.iuh.fit.backend.repository.CompanyRepository;
 import edu.iuh.fit.backend.service.CompanyService;
 import lombok.AllArgsConstructor;
@@ -15,9 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 /*
  * @description

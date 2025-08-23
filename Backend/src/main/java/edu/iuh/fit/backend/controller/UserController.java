@@ -5,11 +5,11 @@
 package edu.iuh.fit.backend.controller;
 
 import com.turkraft.springfilter.boot.Filter;
-import edu.iuh.fit.backend.domain.dto.ResCreateUserDTO;
-import edu.iuh.fit.backend.domain.dto.ResUpdateUserDTO;
-import edu.iuh.fit.backend.domain.dto.ResUserDTO;
-import edu.iuh.fit.backend.domain.dto.ResultPaginationDTO;
-import edu.iuh.fit.backend.domain.response.ApiResponse;
+import edu.iuh.fit.backend.dto.response.CreateUserResponse;
+import edu.iuh.fit.backend.dto.response.UpdateUserResponse;
+import edu.iuh.fit.backend.dto.response.UserResponse;
+import edu.iuh.fit.backend.dto.ResultPaginationDTO;
+import edu.iuh.fit.backend.dto.response.ApiResponse;
 import edu.iuh.fit.backend.domain.User;
 import edu.iuh.fit.backend.service.UserService;
 import edu.iuh.fit.backend.service.impl.UserServiceImpl;
@@ -41,10 +41,10 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<ApiResponse<ResCreateUserDTO>> createUser(@RequestBody @Valid User user) {
+    public ResponseEntity<ApiResponse<CreateUserResponse>> createUser(@RequestBody @Valid User user) {
         String hashPassword = this.passwordEncoder.encode(user.getPassword());
         user.setPassword(hashPassword);
-        ResCreateUserDTO dto = this.userService.createUser(user);
+        CreateUserResponse dto = this.userService.createUser(user);
         var result = new ApiResponse<>(HttpStatus.CREATED.value(), "createUser", dto, null);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
@@ -57,15 +57,15 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<ApiResponse<ResUserDTO>> getUserById(@PathVariable Long id) {
-        ResUserDTO resUserDTO = this.userService.getUserById(id);
-        var response = new ApiResponse<>(HttpStatus.OK.value(), "getUserById", resUserDTO, null);
+    public ResponseEntity<ApiResponse<UserResponse>> getUserById(@PathVariable Long id) {
+        UserResponse userResponse = this.userService.getUserById(id);
+        var response = new ApiResponse<>(HttpStatus.OK.value(), "getUserById", userResponse, null);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/users")
-    public ResponseEntity<ApiResponse<ResUpdateUserDTO>> updateUser(@RequestBody User user) {
-        ResUpdateUserDTO updated = userService.updateUser(user);
+    public ResponseEntity<ApiResponse<UpdateUserResponse>> updateUser(@RequestBody User user) {
+        UpdateUserResponse updated = userService.updateUser(user);
         var result = new ApiResponse<>(HttpStatus.CREATED.value(), "updateUser", updated, null);
         return ResponseEntity.ok(result);
     }

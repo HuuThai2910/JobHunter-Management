@@ -5,13 +5,12 @@
 package edu.iuh.fit.backend.controller;
 
 import edu.iuh.fit.backend.domain.User;
-import edu.iuh.fit.backend.domain.dto.LoginDTO;
-import edu.iuh.fit.backend.domain.dto.ResLoginDTO;
+import edu.iuh.fit.backend.dto.request.LoginRequest;
+import edu.iuh.fit.backend.dto.response.LoginResponse;
 import edu.iuh.fit.backend.service.UserService;
 import edu.iuh.fit.backend.util.SecurityUtil;
 import edu.iuh.fit.backend.util.annotaion.ApiMessage;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -46,28 +45,28 @@ public class AuthController {
 
     @PostMapping("/auth/login")
     @ApiMessage("Login successfully")
-    public ResponseEntity<ResLoginDTO> login(@RequestBody @Valid LoginDTO loginDTO) {
+    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
         //Nạp input gồm username/password vào Security
         UsernamePasswordAuthenticationToken authenticationToken
-                = new UsernamePasswordAuthenticationToken(loginDTO.getUserName(), loginDTO.getPassword());
+                = new UsernamePasswordAuthenticationToken(loginRequest.getUserName(), loginRequest.getPassword());
 
         //xác thực người dùng => cần viết hàm loadUserByUsername
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 //        Set thong tin nguoi dung dang nhap vao context
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        ResLoginDTO res = new ResLoginDTO();
-        User currentUser = this.userService.getUserByUserName(loginDTO.getUserName());
-        ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(currentUser.getId(), currentUser.getEmail(), currentUser.getName());
+        LoginResponse res = new LoginResponse();
+        User currentUser = this.userService.getUserByUserName(loginRequest.getUserName());
+        LoginResponse.UserLogin userLogin = new LoginResponse.UserLogin(currentUser.getId(), currentUser.getEmail(), currentUser.getName());
         res.setUserLogin(userLogin);
 //        Create a token
         String access_token = this.securityUtil.createAccessToken(authentication.getName(), res);
         res.setAccessToken(access_token);
 
 //        Create refresh token
-        String refresh_token = this.securityUtil.createRefreshToken(loginDTO.getUserName(), res);
+        String refresh_token = this.securityUtil.createRefreshToken(loginRequest.getUserName(), res);
 //        Update user
-        this.userService.updateUserToken(refresh_token, loginDTO.getUserName());
+        this.userService.updateUserToken(refresh_token, loginRequest.getUserName());
 
 //        Set cookies
         ResponseCookie responseCookie = ResponseCookie.from("refresh_token", refresh_token)
@@ -83,23 +82,23 @@ public class AuthController {
 
     @GetMapping("/auth/account")
     @ApiMessage("fetch account")
-    public ResponseEntity<ResLoginDTO.UserGetAccount> getAccount() {
+    public ResponseEntity<LoginResponse.UserGetAccount> getAccount() {
         String email = SecurityUtil.getCurrentUserLogin().isPresent()
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
         User currentUser = this.userService.getUserByUserName(email);
-        ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(
+        LoginResponse.UserLogin userLogin = new LoginResponse.UserLogin(
                 currentUser.getId(),
                 currentUser.getEmail(),
                 currentUser.getName()
         );
-        ResLoginDTO.UserGetAccount userGetAccount = new ResLoginDTO.UserGetAccount(userLogin);
+        LoginResponse.UserGetAccount userGetAccount = new LoginResponse.UserGetAccount(userLogin);
         return ResponseEntity.ok().body(userGetAccount);
     }
 
     @GetMapping("/auth/refresh")
     @ApiMessage("Get user by refresh token")
-    public ResponseEntity<ResLoginDTO> getRefreshToken(@CookieValue(name = "refresh_token") String refresh_token) {
+    public ResponseEntity<LoginResponse> getRefreshToken(@CookieValue(name = "refresh_token") String refresh_token) {
 
 //        Check valid
         Jwt decodedToken = this.securityUtil.checkValidRefreshToken(refresh_token);
@@ -109,8 +108,8 @@ public class AuthController {
         if (currentUser == null) {
             throw new RuntimeException("Refresh token invalid");
         }
-        ResLoginDTO res = new ResLoginDTO();
-        ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(currentUser.getId(), currentUser.getEmail(), currentUser.getName());
+        LoginResponse res = new LoginResponse();
+        LoginResponse.UserLogin userLogin = new LoginResponse.UserLogin(currentUser.getId(), currentUser.getEmail(), currentUser.getName());
         res.setUserLogin(userLogin);
         //        Create a token
         String access_token = this.securityUtil.createAccessToken(email, res);

@@ -5,7 +5,7 @@
 package edu.iuh.fit.backend.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.iuh.fit.backend.domain.response.ApiResponse;
+import edu.iuh.fit.backend.dto.response.ApiResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

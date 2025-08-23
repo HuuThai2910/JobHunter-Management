@@ -2,9 +2,8 @@
  * @ (#) .java    1.0
  * Copyright (c)  IUH. All rights reserved.
  */
-package edu.iuh.fit.backend.domain.dto;
+package edu.iuh.fit.backend.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import edu.iuh.fit.backend.util.constant.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,7 +22,7 @@ import java.time.Instant;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResCreateUserDTO {
+public class UserResponse {
     private Long id;
     private String name;
     private String email;
@@ -32,4 +31,6 @@ public class ResCreateUserDTO {
     private String address;
 //    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
     private Instant createdAt;
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
+    private Instant updatedAt;
 }

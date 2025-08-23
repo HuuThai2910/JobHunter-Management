@@ -2,7 +2,7 @@
  * @ (#) .java    1.0
  * Copyright (c)  IUH. All rights reserved.
  */
-package edu.iuh.fit.backend.domain.dto;
+package edu.iuh.fit.backend.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -18,7 +18,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class LoginDTO {
+public class LoginRequest {
     @NotBlank(message = "User name cannot be blank")
     private String userName;
     @NotBlank(message = "Password cannot be blank")

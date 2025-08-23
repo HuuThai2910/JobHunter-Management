@@ -4,8 +4,7 @@
  */
 package edu.iuh.fit.backend.util;
 
-import edu.iuh.fit.backend.domain.response.ApiResponse;
-import edu.iuh.fit.backend.domain.response.RestResponse;
+import edu.iuh.fit.backend.dto.response.ApiResponse;
 import edu.iuh.fit.backend.util.annotaion.ApiMessage;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.MethodParameter;
@@ -40,7 +39,7 @@ public class FormatApiResponse implements ResponseBodyAdvice<Object> {
         HttpServletResponse servletResponse = ((ServletServerHttpResponse) response).getServletResponse();
         int status = servletResponse.getStatus();
 
-        RestResponse<Object> res = new RestResponse<Object>();
+        ApiResponse<Object> res = new ApiResponse<>();
         res.setStatusCode(status);
         if (body instanceof ApiResponse || body instanceof String) {
             return body;
