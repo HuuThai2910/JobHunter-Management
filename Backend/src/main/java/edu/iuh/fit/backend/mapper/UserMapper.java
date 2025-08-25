@@ -4,7 +4,9 @@
  */
 package edu.iuh.fit.backend.mapper;
 
+import edu.iuh.fit.backend.domain.Company;
 import edu.iuh.fit.backend.domain.User;
+import edu.iuh.fit.backend.dto.response.CompanySummaryResponse;
 import edu.iuh.fit.backend.dto.response.CreateUserResponse;
 import edu.iuh.fit.backend.dto.response.UpdateUserResponse;
 import edu.iuh.fit.backend.dto.response.UserResponse;
@@ -32,4 +34,6 @@ public interface UserMapper {
     UserResponse toResUserDTO(User user);
 
     List<UserResponse> toResListUserDTO(List<User> users);
+
+    CompanySummaryResponse toCompanySummaryResponse(Company company);
 }

@@ -4,9 +4,8 @@
  */
 package edu.iuh.fit.backend.repository;
 
+import edu.iuh.fit.backend.domain.Company;
 import edu.iuh.fit.backend.domain.User;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -24,4 +23,6 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     User findByEmail(String userName);
 
     User findByRefreshTokenAndEmail(String refreshToken, String email);
+
+    void deleteByCompany(Company company);
 }

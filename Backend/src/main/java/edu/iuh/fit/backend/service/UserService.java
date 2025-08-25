@@ -4,6 +4,7 @@
  */
 package edu.iuh.fit.backend.service;
 
+import edu.iuh.fit.backend.domain.Company;
 import edu.iuh.fit.backend.domain.User;
 import edu.iuh.fit.backend.dto.response.CreateUserResponse;
 import edu.iuh.fit.backend.dto.response.UpdateUserResponse;
@@ -19,6 +20,7 @@ import org.springframework.data.jpa.domain.Specification;
  * @version: 1.0
  */
 public interface UserService {
+
     CreateUserResponse createUser(User user);
 
     ResultPaginationDTO getAllUsers(Specification<User> specification, Pageable pageable);

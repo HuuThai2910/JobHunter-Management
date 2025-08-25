@@ -5,6 +5,7 @@
 package edu.iuh.fit.backend.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.iuh.fit.backend.util.SecurityUtil;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -12,6 +13,7 @@ import lombok.*;
 import org.hibernate.annotations.Columns;
 
 import java.time.Instant;
+import java.util.List;
 
 /*
  * @description
@@ -50,6 +52,11 @@ public class Company {
     private String createdBy;
 
     private String updatedBy;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "company")
+    @JsonIgnore
+    private List<User> users;
 
 //    Ham them nguoi tao company truoc save company
     @PrePersist

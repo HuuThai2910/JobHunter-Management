@@ -53,6 +53,11 @@ public class User {
     private String createBy;
     private String updatedBy;
 
+    @ToString.Exclude
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
+
 //    Ham them nguoi tao user truoc khi save user
     @PrePersist
     public void handleBeforeCreate(){

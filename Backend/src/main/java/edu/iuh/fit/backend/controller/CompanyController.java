@@ -63,7 +63,7 @@ public class CompanyController {
     @DeleteMapping("/companies/{id}")
     @ApiMessage("Delete company successfully")
     public ResponseEntity<Void> deleteCompany(@PathVariable Long id){
-        this.companyService.handleDeletCompany(id);
+        this.companyService.handleDeleteCompany(id);
         return ResponseEntity.ok(null);
     }
 }

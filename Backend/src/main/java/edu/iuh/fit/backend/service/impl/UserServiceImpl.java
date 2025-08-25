@@ -4,12 +4,14 @@
  */
 package edu.iuh.fit.backend.service.impl;
 
+import edu.iuh.fit.backend.domain.Company;
 import edu.iuh.fit.backend.domain.User;
 import edu.iuh.fit.backend.dto.*;
 import edu.iuh.fit.backend.dto.response.CreateUserResponse;
 import edu.iuh.fit.backend.dto.response.UpdateUserResponse;
 import edu.iuh.fit.backend.dto.response.UserResponse;
 import edu.iuh.fit.backend.mapper.UserMapper;
+import edu.iuh.fit.backend.repository.CompanyRepository;
 import edu.iuh.fit.backend.repository.UserRepository;
 import edu.iuh.fit.backend.service.UserService;
 import lombok.AllArgsConstructor;
@@ -30,6 +32,7 @@ import java.util.NoSuchElementException;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final CompanyRepository companyRepository;
     private final UserMapper userMapper;
 
     @Override
@@ -37,6 +40,8 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
+        Company companyExists = companyRepository.findById(user.getCompany().getId()).orElse(null);
+        user.setCompany(companyExists);
         User newUser = this.userRepository.save(user);
         return this.userMapper.toResCreateUserDTO(newUser);
     }
@@ -64,11 +69,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UpdateUserResponse updateUser(User updatedUser) {
+        Company companyExists = this.companyRepository.findById(updatedUser.getCompany().getId()).orElse(null);
         return this.userRepository.findById(updatedUser.getId()).map(user -> {
             user.setName(updatedUser.getName());
             user.setGender(updatedUser.getGender());
             user.setAddress(updatedUser.getAddress());
             user.setAge(updatedUser.getAge());
+            user.setCompany(companyExists);
             User currentUser = this.userRepository.save(user);
             return this.userMapper.toResUpdateUserDTO(currentUser);
         }).orElseThrow(() -> new NoSuchElementException("User not found"));

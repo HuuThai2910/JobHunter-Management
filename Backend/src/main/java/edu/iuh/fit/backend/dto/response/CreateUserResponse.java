@@ -31,4 +31,6 @@ public class CreateUserResponse {
     private String address;
 //    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
     private Instant createdAt;
+
+    private CompanySummaryResponse company;
 }

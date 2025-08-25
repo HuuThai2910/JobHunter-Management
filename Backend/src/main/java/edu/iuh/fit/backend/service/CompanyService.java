@@ -24,5 +24,5 @@ public interface CompanyService {
 
     Company handleUpdateCompany(Company updatedCompany);
 
-    void handleDeletCompany(Long id);
+    void handleDeleteCompany(Long id);
 }

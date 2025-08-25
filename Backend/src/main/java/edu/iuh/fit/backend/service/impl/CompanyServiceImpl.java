@@ -5,9 +5,11 @@
 package edu.iuh.fit.backend.service.impl;
 
 import edu.iuh.fit.backend.domain.Company;
+import edu.iuh.fit.backend.domain.User;
 import edu.iuh.fit.backend.dto.Meta;
 import edu.iuh.fit.backend.dto.ResultPaginationDTO;
 import edu.iuh.fit.backend.repository.CompanyRepository;
+import edu.iuh.fit.backend.repository.UserRepository;
 import edu.iuh.fit.backend.service.CompanyService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 /*
@@ -27,6 +30,7 @@ import java.util.NoSuchElementException;
 @AllArgsConstructor
 public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
+    private final UserRepository userRepository;
 
     @Override
     public Company handleCreateCompany(Company company){
@@ -66,10 +70,13 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public void handleDeletCompany(Long id){
-        if(!companyRepository.existsById(id)){
+    public void handleDeleteCompany(Long id){
+        Company company = companyRepository.findById(id).orElse(null);
+        if(company == null){
             throw new NoSuchElementException("Company not found");
         }
+        List<User> users = company.getUsers();
+        this.userRepository.deleteAll(users);
         this.companyRepository.deleteById(id);
     }
 
