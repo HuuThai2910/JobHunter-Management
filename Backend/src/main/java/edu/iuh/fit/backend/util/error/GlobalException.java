@@ -5,6 +5,7 @@
 package edu.iuh.fit.backend.util.error;
 
 import edu.iuh.fit.backend.dto.response.ApiResponse;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +32,8 @@ public class GlobalException {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<?>> hanldeAllException(Exception ex) {
         var result = new ApiResponse<>(
-                HttpStatus.BAD_REQUEST.value(), ex.getMessage(),
-                null, "handleAllException"
+                HttpStatus.BAD_REQUEST.value(), "handleAllException",
+                null, ex.getMessage()
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
     }
@@ -59,6 +60,14 @@ public class GlobalException {
                 null, ex.getMessage()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+    }
+    @ExceptionHandler(StorageException.class)
+    public ResponseEntity<ApiResponse<?>> handleFileUploadException(StorageException ex) {
+        var result = new ApiResponse<>(
+                HttpStatus.BAD_REQUEST.value(), "Exception upload file" ,
+                null, ex.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
     }
 
 

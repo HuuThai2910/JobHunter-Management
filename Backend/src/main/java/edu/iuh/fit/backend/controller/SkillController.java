@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
  * @date:
  * @version: 1.0
  */
-@Controller
+@RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1")
 public class SkillController {
