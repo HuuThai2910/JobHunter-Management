@@ -54,7 +54,7 @@ public class SecurityConfiguration {
                                                    CustomAuthenticationEntryPoint customAuthenticationEntryPoint) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/api/v1/auth/login", "/api/v1/auth/refresh").permitAll()
+                        .requestMatchers("/", "/api/v1/auth/login", "/api/v1/auth/refresh", "/storage/**").permitAll()
                         .anyRequest().authenticated())
 //                Dung de goi ra CORS filter
                 .cors(Customizer.withDefaults())
