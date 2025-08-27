@@ -58,6 +58,11 @@ public class Company {
     @JsonIgnore
     private List<User> users;
 
+    @ToString.Exclude
+    @OneToMany(mappedBy = "company")
+    @JsonIgnore
+    private List<Job> jobs;
+
 //    Ham them nguoi tao company truoc save company
     @PrePersist
     public void handleBeforeCreate(){
