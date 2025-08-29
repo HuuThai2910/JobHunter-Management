@@ -8,6 +8,7 @@ import edu.iuh.fit.backend.domain.Job;
 import edu.iuh.fit.backend.domain.Skill;
 import edu.iuh.fit.backend.dto.response.CreateJobResponse;
 import edu.iuh.fit.backend.dto.response.JobResponse;
+import edu.iuh.fit.backend.dto.response.JobSummaryResponse;
 import edu.iuh.fit.backend.dto.response.UpdateJobResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -33,6 +34,8 @@ public interface JobMapper {
     UpdateJobResponse toUpdateJobResponse(Job job);
 
     List<JobResponse> toListJobResponse(List<Job> jobs);
+
+
 
     // --- Custom mapper method ---
     @Named("mapSkillsToNames")

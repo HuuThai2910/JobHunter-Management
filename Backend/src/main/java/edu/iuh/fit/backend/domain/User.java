@@ -5,6 +5,7 @@
 package edu.iuh.fit.backend.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.iuh.fit.backend.util.SecurityUtil;
 import edu.iuh.fit.backend.util.constant.Gender;
 import jakarta.persistence.*;
@@ -14,6 +15,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.List;
 
 /*
  * @description
@@ -57,6 +59,12 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Resume> resumes;
+
+
 
 //    Ham them nguoi tao user truoc khi save user
     @PrePersist

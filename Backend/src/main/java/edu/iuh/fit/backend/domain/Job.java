@@ -52,6 +52,10 @@ public class Job {
     @JoinColumn(name = "company_id")
     private Company company;
 
+    @OneToMany(mappedBy = "job")
+    @JsonIgnore
+    private List<Resume> resumes;
+
     @ToString.Exclude
     @ManyToMany
     @JsonIgnoreProperties(value = "jobs")
