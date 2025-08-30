@@ -59,7 +59,8 @@ public class JobServiceImpl implements JobService {
                     job1.setLevel(job.getLevel());
                     job1.setDescription(job.getDescription());
                     job1.setActive(job.isActive());
-                    job1.setSkills(skills);
+                    job1.setSkills(job.getSkills() != null ? skills : job1.getSkills());
+                    job1.setCompany(job.getCompany() != null ? job.getCompany() : job1.getCompany());
                     Job updateJob = this.jobRepository.save(job1);
                     return this.jobMapper.toUpdateJobResponse(updateJob);
                 }).orElseThrow(() -> new NoSuchElementException("Job not found"));

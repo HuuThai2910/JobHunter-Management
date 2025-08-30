@@ -52,10 +52,16 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
                                                    CustomAuthenticationEntryPoint customAuthenticationEntryPoint) throws Exception {
+        String[] whiteList = {
+                "/", "/api/v1/auth/login", "/api/v1/auth/refresh", "/storage/**",
+                "/api/v1/companies/**", "/api/v1/jobs/**"
+        };
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/api/v1/auth/login", "/api/v1/auth/refresh", "/storage/**").permitAll()
-                        .anyRequest().authenticated())
+                        .requestMatchers(whiteList)
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
 //                Dung de goi ra CORS filter
                 .cors(Customizer.withDefaults())
 //              Dung de them filter BearerTokenAuthentication de decode
