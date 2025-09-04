@@ -6,19 +6,19 @@ package edu.iuh.fit.backend.controller;
 
 import edu.iuh.fit.backend.domain.User;
 import edu.iuh.fit.backend.dto.request.LoginRequest;
+import edu.iuh.fit.backend.dto.response.CreateUserResponse;
 import edu.iuh.fit.backend.dto.response.LoginResponse;
 import edu.iuh.fit.backend.service.UserService;
 import edu.iuh.fit.backend.util.SecurityUtil;
 import edu.iuh.fit.backend.util.annotaion.ApiMessage;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,13 +34,15 @@ public class AuthController {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final SecurityUtil securityUtil;
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
     @Value("${thai.jwt.refresh-token-validity-in-seconds}")
     private Long refreshTokenExpiration;
 
-    public AuthController(AuthenticationManagerBuilder authenticationManagerBuilder, SecurityUtil securityUtil, UserService userService) {
+    public AuthController(AuthenticationManagerBuilder authenticationManagerBuilder, SecurityUtil securityUtil, UserService userService, PasswordEncoder passwordEncoder) {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.securityUtil = securityUtil;
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/auth/login")
@@ -160,5 +162,14 @@ public class AuthController {
                 .header(HttpHeaders.SET_COOKIE, deleteCookie.toString())
                 .build();
 
+    }
+
+    @PostMapping("/auth/register")
+    @ApiMessage("Register a new user")
+    public ResponseEntity<CreateUserResponse> register(@Valid @RequestBody User userRegis){
+        String hashPassword = this.passwordEncoder.encode(userRegis.getPassword());
+        userRegis.setPassword(hashPassword);
+        CreateUserResponse newUser = this.userService.createUser(userRegis);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 }

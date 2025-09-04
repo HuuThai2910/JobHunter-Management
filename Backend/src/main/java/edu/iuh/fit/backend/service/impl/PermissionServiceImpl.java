@@ -82,4 +82,12 @@ public class PermissionServiceImpl implements PermissionService {
         resultPaginationDTO.setResult(permissionPage.getContent());
         return resultPaginationDTO;
     }
+
+    public boolean isSameName(Permission p) {
+        Permission permissionDB = this.fetchById(p.getId());
+        if(permissionDB != null){
+            return permissionDB.getName().equals(p.getName());
+        }
+        return false;
+    }
 }
