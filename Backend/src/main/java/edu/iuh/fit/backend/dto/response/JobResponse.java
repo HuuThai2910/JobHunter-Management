@@ -4,6 +4,7 @@
  */
 package edu.iuh.fit.backend.dto.response;
 
+import edu.iuh.fit.backend.domain.Skill;
 import edu.iuh.fit.backend.util.constant.Level;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -39,5 +40,6 @@ public class JobResponse {
     private Instant updatedAt;
     private String createdBy;
     private  String updatedBy;
-    private List<String> skills;
+    private CompanySummaryResponse company;
+    private List<Skill> skills;
 }

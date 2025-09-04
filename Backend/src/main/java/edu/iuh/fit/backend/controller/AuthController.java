@@ -48,7 +48,7 @@ public class AuthController {
     public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
         //Nạp input gồm username/password vào Security
         UsernamePasswordAuthenticationToken authenticationToken
-                = new UsernamePasswordAuthenticationToken(loginRequest.getUserName(), loginRequest.getPassword());
+                = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
 
         //xác thực người dùng => cần viết hàm loadUserByUsername
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
@@ -56,7 +56,7 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         LoginResponse res = new LoginResponse();
-        User currentUser = this.userService.getUserByUserName(loginRequest.getUserName());
+        User currentUser = this.userService.getUserByUserName(loginRequest.getUsername());
         LoginResponse.UserLogin userLogin = new LoginResponse.UserLogin(currentUser.getId(), currentUser.getEmail(), currentUser.getName());
         res.setUserLogin(userLogin);
 //        Create a token
@@ -64,9 +64,9 @@ public class AuthController {
         res.setAccessToken(access_token);
 
 //        Create refresh token
-        String refresh_token = this.securityUtil.createRefreshToken(loginRequest.getUserName(), res);
+        String refresh_token = this.securityUtil.createRefreshToken(loginRequest.getUsername(), res);
 //        Update user
-        this.userService.updateUserToken(refresh_token, loginRequest.getUserName());
+        this.userService.updateUserToken(refresh_token, loginRequest.getUsername());
 
 //        Set cookies
         ResponseCookie responseCookie = ResponseCookie.from("refresh_token", refresh_token)

@@ -64,6 +64,10 @@ public class User {
     @JsonIgnore
     private List<Resume> resumes;
 
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
+
 
 
 //    Ham them nguoi tao user truoc khi save user

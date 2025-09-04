@@ -4,13 +4,10 @@
  */
 package edu.iuh.fit.backend.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.iuh.fit.backend.util.SecurityUtil;
+import edu.iuh.fit.backend.util.constant.Level;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import org.hibernate.annotations.Columns;
 
 import java.time.Instant;
 import java.util.List;
@@ -21,58 +18,37 @@ import java.util.List;
  * @date:
  * @version: 1.0
  */
-@Table(name = "companies")
+@Table(name = "permissions")
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Company {
+public class Permission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    @NotBlank(message = "Company name cannot be blank")
+    private Long id;
     private String name;
-
-    @Column(columnDefinition = "MEDIUMTEXT")
-    private String description;
-
-    private String address;
-
-    private String logo;
-
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
+    private String apiPath;
+    private String method;
+    private String module;
     private Instant createdAt;
-
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
     private Instant updatedAt;
-
     private String createdBy;
+    private  String updatedBy;
 
-    private String updatedBy;
+    @ManyToMany(mappedBy = "permissions")
+    private List<Role> roles;
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "company")
-    @JsonIgnore
-    private List<User> users;
-
-    @ToString.Exclude
-    @OneToMany(mappedBy = "company")
-    @JsonIgnore
-    private List<Job> jobs;
-
-//    Ham them nguoi tao company truoc save company
     @PrePersist
-    public void handleBeforeCreate(){
+    void handleBeforeCreate(){
         this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent()
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
         this.createdAt = Instant.now();
     }
 
-//    Ham them nguoi cap nhat company
     @PreUpdate
     public void handleBeforeUpdate(){
         this.updatedBy = SecurityUtil.getCurrentUserLogin().isPresent()

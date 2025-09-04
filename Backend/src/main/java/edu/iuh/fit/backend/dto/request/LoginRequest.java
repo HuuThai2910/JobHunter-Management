@@ -20,7 +20,7 @@ import lombok.*;
 @ToString
 public class LoginRequest {
     @NotBlank(message = "User name cannot be blank")
-    private String userName;
+    private String username;
     @NotBlank(message = "Password cannot be blank")
     private String password;
 }

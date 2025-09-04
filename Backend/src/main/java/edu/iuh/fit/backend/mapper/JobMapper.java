@@ -4,12 +4,10 @@
  */
 package edu.iuh.fit.backend.mapper;
 
+import edu.iuh.fit.backend.domain.Company;
 import edu.iuh.fit.backend.domain.Job;
 import edu.iuh.fit.backend.domain.Skill;
-import edu.iuh.fit.backend.dto.response.CreateJobResponse;
-import edu.iuh.fit.backend.dto.response.JobResponse;
-import edu.iuh.fit.backend.dto.response.JobSummaryResponse;
-import edu.iuh.fit.backend.dto.response.UpdateJobResponse;
+import edu.iuh.fit.backend.dto.response.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -24,7 +22,6 @@ import java.util.List;
  */
 @Mapper(componentModel = "spring")
 public interface JobMapper {
-    @Mapping(target = "skills", qualifiedByName = "mapSkillsToNames")
     JobResponse toJobResponse(Job job);
 
     @Mapping(target = "skills", qualifiedByName = "mapSkillsToNames")
@@ -35,6 +32,7 @@ public interface JobMapper {
 
     List<JobResponse> toListJobResponse(List<Job> jobs);
 
+    CompanySummaryResponse toCompanySummaryResponse(Company company);
 
 
     // --- Custom mapper method ---
