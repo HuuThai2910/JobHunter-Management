@@ -57,7 +57,11 @@ public class AuthController {
 
         LoginResponse res = new LoginResponse();
         User currentUser = this.userService.getUserByUserName(loginRequest.getUsername());
-        LoginResponse.UserLogin userLogin = new LoginResponse.UserLogin(currentUser.getId(), currentUser.getEmail(), currentUser.getName());
+        LoginResponse.UserLogin userLogin = new LoginResponse.UserLogin(
+                currentUser.getId(),
+                currentUser.getEmail(),
+                currentUser.getName(),
+                currentUser.getRole());
         res.setUserLogin(userLogin);
 //        Create a token
         String access_token = this.securityUtil.createAccessToken(authentication.getName(), res);
@@ -90,7 +94,8 @@ public class AuthController {
         LoginResponse.UserLogin userLogin = new LoginResponse.UserLogin(
                 currentUser.getId(),
                 currentUser.getEmail(),
-                currentUser.getName()
+                currentUser.getName(),
+                currentUser.getRole()
         );
         LoginResponse.UserGetAccount userGetAccount = new LoginResponse.UserGetAccount(userLogin);
         return ResponseEntity.ok().body(userGetAccount);
@@ -109,7 +114,11 @@ public class AuthController {
             throw new RuntimeException("Refresh token invalid");
         }
         LoginResponse res = new LoginResponse();
-        LoginResponse.UserLogin userLogin = new LoginResponse.UserLogin(currentUser.getId(), currentUser.getEmail(), currentUser.getName());
+        LoginResponse.UserLogin userLogin = new LoginResponse.UserLogin(
+                currentUser.getId(),
+                currentUser.getEmail(),
+                currentUser.getName(),
+                currentUser.getRole());
         res.setUserLogin(userLogin);
         //        Create a token
         String access_token = this.securityUtil.createAccessToken(email, res);

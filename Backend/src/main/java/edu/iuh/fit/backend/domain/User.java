@@ -4,7 +4,6 @@
  */
 package edu.iuh.fit.backend.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.iuh.fit.backend.util.SecurityUtil;
 import edu.iuh.fit.backend.util.constant.Gender;
@@ -67,8 +66,6 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
-
-
 
 //    Ham them nguoi tao user truoc khi save user
     @PrePersist

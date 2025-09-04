@@ -46,10 +46,11 @@ public class SecurityUtil {
         this.jwtEncoder = jwtEncoder;
     }
 
-
-
-
     public String createAccessToken(String email, LoginResponse loginResponse) {
+        LoginResponse.UserInsideToken userInsideToken = new LoginResponse.UserInsideToken();
+        userInsideToken.setId(loginResponse.getUserLogin().getId());
+        userInsideToken.setEmail(loginResponse.getUserLogin().getEmail());
+        userInsideToken.setName(loginResponse.getUserLogin().getName());
         Instant now = Instant.now();
         Instant validity = now.plus(this.accessTokenExpiration, ChronoUnit.SECONDS);
 //        Hard code permission
@@ -62,13 +63,17 @@ public class SecurityUtil {
                 .issuedAt(now)
                 .expiresAt(validity)
                 .subject(email)
-                .claim("user", loginResponse.getUserLogin())
+                .claim("user", userInsideToken)
                 .claim("permission", listAuthority)
                 .build();
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
     }
     public String createRefreshToken(String email, LoginResponse loginResponse) {
+        LoginResponse.UserInsideToken userInsideToken = new LoginResponse.UserInsideToken();
+        userInsideToken.setId(loginResponse.getUserLogin().getId());
+        userInsideToken.setEmail(loginResponse.getUserLogin().getEmail());
+        userInsideToken.setName(loginResponse.getUserLogin().getName());
         Instant now = Instant.now();
         Instant validity = now.plus(this.refreshTokenExpiration, ChronoUnit.SECONDS);
 
@@ -77,7 +82,7 @@ public class SecurityUtil {
                 .issuedAt(now)
                 .expiresAt(validity)
                 .subject(email)
-                .claim("user", loginResponse.getUserLogin())
+                .claim("user", userInsideToken)
                 .build();
 
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();

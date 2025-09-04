@@ -48,10 +48,10 @@ public class RoleController {
         if (this.roleService.fetchById(r.getId()) == null) {
                  throw new InvalidException("Role với id = " + r.getId() + "không tồn tại");
         }
-        // check name
-                if (this.roleService.existByName(r.getName())) {
-                    throw new InvalidException("Role với name = " + r.getName() + "đã tồn tại");
-                }
+//        // check name
+//                if (this.roleService.existByName(r.getName())) {
+//                    throw new InvalidException("Role với name = " + r.getName() + "đã tồn tại");
+//                }
                 return ResponseEntity.status (HttpStatus.CREATED).body(this.roleService.update(r));
     }
 
@@ -71,5 +71,10 @@ public class RoleController {
     public ResponseEntity<ResultPaginationDTO> getRoles(
             @Filter Specification<Role> spec, Pageable pageable) {
         return ResponseEntity.ok(this.roleService.getRoles(spec, pageable));
+    }
+    @GetMapping("/roles/{id}")
+    @ApiMessage("Fetch role successfully")
+    public ResponseEntity<Role> getRoleById(@PathVariable Long id){
+        return ResponseEntity.ok(this.roleService.fetchById(id));
     }
 }

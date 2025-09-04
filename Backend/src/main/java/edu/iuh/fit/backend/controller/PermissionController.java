@@ -6,6 +6,7 @@ package edu.iuh.fit.backend.controller;
 
 import com.turkraft.springfilter.boot.Filter;
 import edu.iuh.fit.backend.domain.Permission;
+import edu.iuh.fit.backend.domain.Skill;
 import edu.iuh.fit.backend.dto.ResultPaginationDTO;
 import edu.iuh.fit.backend.service.PermissionService;
 import edu.iuh.fit.backend.service.impl.PermissionServiceImpl;
@@ -70,5 +71,10 @@ public class PermissionController {
     public ResponseEntity<ResultPaginationDTO> getPermissions(
             @Filter Specification<Permission> spec, Pageable pageable) {
         return ResponseEntity.ok(this.permissionService.getPermissions(spec, pageable));
+    }
+    @GetMapping("/permissions/{id}")
+    @ApiMessage("Fetch permission successfully")
+    public ResponseEntity<Permission> getPermissionById(@PathVariable Long id){
+        return ResponseEntity.ok(this.permissionService.fetchById(id));
     }
 }

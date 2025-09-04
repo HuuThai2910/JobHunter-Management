@@ -35,4 +35,6 @@ public class UserResponse {
     private Instant updatedAt;
 
     private CompanySummaryResponse company;
+
+    private RoleSummaryResponse role;
 }

@@ -27,4 +27,6 @@ public interface ResumeService {
     ResumeResponse handleGetResumeById(Long id);
 
     ResultPaginationDTO handleGetAllResume(Specification<Resume> specification, Pageable pageable);
+
+    ResultPaginationDTO getResumeByUser(Pageable pageable);
 }

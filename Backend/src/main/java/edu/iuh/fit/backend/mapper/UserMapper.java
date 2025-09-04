@@ -5,6 +5,7 @@
 package edu.iuh.fit.backend.mapper;
 
 import edu.iuh.fit.backend.domain.Company;
+import edu.iuh.fit.backend.domain.Role;
 import edu.iuh.fit.backend.domain.User;
 import edu.iuh.fit.backend.dto.response.*;
 import org.mapstruct.Mapper;
@@ -33,6 +34,8 @@ public interface UserMapper {
     List<UserResponse> toResListUserDTO(List<User> users);
 
     CompanySummaryResponse toCompanySummaryResponse(Company company);
+
+    RoleSummaryResponse toRoleSummaryResponse(Role role);
 
 
 }

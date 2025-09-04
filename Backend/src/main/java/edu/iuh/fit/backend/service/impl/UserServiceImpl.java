@@ -5,6 +5,7 @@
 package edu.iuh.fit.backend.service.impl;
 
 import edu.iuh.fit.backend.domain.Company;
+import edu.iuh.fit.backend.domain.Role;
 import edu.iuh.fit.backend.domain.User;
 import edu.iuh.fit.backend.dto.*;
 import edu.iuh.fit.backend.dto.response.CreateUserResponse;
@@ -13,6 +14,7 @@ import edu.iuh.fit.backend.dto.response.UserResponse;
 import edu.iuh.fit.backend.mapper.UserMapper;
 import edu.iuh.fit.backend.repository.CompanyRepository;
 import edu.iuh.fit.backend.repository.UserRepository;
+import edu.iuh.fit.backend.service.RoleService;
 import edu.iuh.fit.backend.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,6 +36,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
     private final UserMapper userMapper;
+    private final RoleService roleService;
 
     @Override
     public CreateUserResponse createUser(User user) {
@@ -42,6 +45,10 @@ public class UserServiceImpl implements UserService {
         }
         Company companyExists = companyRepository.findById(user.getCompany().getId()).orElse(null);
         user.setCompany(companyExists);
+        if(user.getRole() != null){
+            Role r = this.roleService.fetchById(user.getRole().getId());
+            user.setRole(r);
+        }
         User newUser = this.userRepository.save(user);
         return this.userMapper.toResCreateUserDTO(newUser);
     }
@@ -76,6 +83,10 @@ public class UserServiceImpl implements UserService {
             user.setAddress(updatedUser.getAddress());
             user.setAge(updatedUser.getAge());
             user.setCompany(companyExists);
+            if(updatedUser.getRole() != null) {
+                Role r = this.roleService.fetchById(updatedUser.getRole().getId());
+                user.setRole(r);
+            }
             User currentUser = this.userRepository.save(user);
             return this.userMapper.toResUpdateUserDTO(currentUser);
         }).orElseThrow(() -> new NoSuchElementException("User not found"));

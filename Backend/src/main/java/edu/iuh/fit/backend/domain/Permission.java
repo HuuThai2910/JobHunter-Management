@@ -4,6 +4,7 @@
  */
 package edu.iuh.fit.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.iuh.fit.backend.util.SecurityUtil;
 import edu.iuh.fit.backend.util.constant.Level;
 import jakarta.persistence.*;
@@ -39,6 +40,7 @@ public class Permission {
     private  String updatedBy;
 
     @ManyToMany(mappedBy = "permissions")
+    @JsonIgnore
     private List<Role> roles;
 
     @PrePersist

@@ -4,6 +4,11 @@
  */
 package edu.iuh.fit.backend.service.impl;
 
+import com.turkraft.springfilter.builder.FilterBuilder;
+import com.turkraft.springfilter.converter.FilterSpecification;
+import com.turkraft.springfilter.converter.FilterSpecificationConverter;
+import com.turkraft.springfilter.parser.FilterParser;
+import com.turkraft.springfilter.parser.node.FilterNode;
 import edu.iuh.fit.backend.domain.Resume;
 import edu.iuh.fit.backend.dto.Meta;
 import edu.iuh.fit.backend.dto.ResultPaginationDTO;
@@ -14,6 +19,7 @@ import edu.iuh.fit.backend.mapper.ResumeMapper;
 import edu.iuh.fit.backend.repository.JobRepository;
 import edu.iuh.fit.backend.repository.ResumeRepository;
 import edu.iuh.fit.backend.repository.UserRepository;
+import edu.iuh.fit.backend.util.SecurityUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +41,9 @@ public class ResumeServiceImpl implements edu.iuh.fit.backend.service.ResumeServ
     private final UserRepository userRepository;
     private final JobRepository jobRepository;
     private final ResumeMapper resumeMapper;
+    private FilterBuilder filterBuilder;
+    private final FilterParser filterParser;
+    private final FilterSpecificationConverter filterSpecificationConverter;
 
     @Override
     public CreateResumeResponse handleCreateResume(Resume resume){
@@ -84,5 +93,25 @@ public class ResumeServiceImpl implements edu.iuh.fit.backend.service.ResumeServ
         resultPaginationDTO.setMeta(meta);
         resultPaginationDTO.setResult(this.resumeMapper.toListResumeResponse(resumePage.getContent()));
         return resultPaginationDTO;
+    }
+
+    @Override
+    public ResultPaginationDTO getResumeByUser(Pageable pageable) {
+        // query builder
+        String email = SecurityUtil.getCurrentUserLogin().isPresent()
+                ? SecurityUtil.getCurrentUserLogin().get()
+                : "";
+        FilterNode node = filterParser.parse("email='" + email + "'");
+        FilterSpecification<Resume> spec = filterSpecificationConverter.convert(node);
+        Page<Resume> pageResume = this.resumeRepository.findAll(spec, pageable);
+        ResultPaginationDTO rs = new ResultPaginationDTO();
+        Meta meta = new Meta();
+        meta.setPages(pageable.getPageSize());
+        meta.setPage(pageable.getPageNumber() + 1);
+        meta.setPageSize(pageResume.getTotalPages());
+        meta.setTotal(pageResume.getTotalElements());
+        rs.setMeta(meta);
+        rs.setResult(pageResume.getContent());
+        return rs;
     }
 }
