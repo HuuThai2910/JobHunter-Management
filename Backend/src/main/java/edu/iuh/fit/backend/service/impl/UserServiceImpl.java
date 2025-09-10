@@ -43,8 +43,12 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
-        Company companyExists = companyRepository.findById(user.getCompany().getId()).orElse(null);
-        user.setCompany(companyExists);
+        if(user.getCompany() != null){
+            Company companyExists = companyRepository.findById(user.getCompany().getId()).orElse(null);
+            user.setCompany(companyExists);
+        }
+
+
         if(user.getRole() != null){
             Role r = this.roleService.fetchById(user.getRole().getId());
             user.setRole(r);
@@ -76,13 +80,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UpdateUserResponse updateUser(User updatedUser) {
-        Company companyExists = this.companyRepository.findById(updatedUser.getCompany().getId()).orElse(null);
         return this.userRepository.findById(updatedUser.getId()).map(user -> {
             user.setName(updatedUser.getName());
             user.setGender(updatedUser.getGender());
             user.setAddress(updatedUser.getAddress());
             user.setAge(updatedUser.getAge());
-            user.setCompany(companyExists);
+            user.setEmail(updatedUser.getEmail());
+            if(updatedUser.getCompany() != null){
+                Company companyExists = this.companyRepository.findById(updatedUser.getCompany().getId()).orElse(null);
+                user.setCompany(companyExists);
+            }
             if(updatedUser.getRole() != null) {
                 Role r = this.roleService.fetchById(updatedUser.getRole().getId());
                 user.setRole(r);

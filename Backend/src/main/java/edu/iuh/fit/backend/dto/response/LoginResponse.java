@@ -24,7 +24,7 @@ import lombok.Setter;
 public class LoginResponse {
     @JsonProperty("access_token")
     private String accessToken;
-    private UserLogin userLogin;
+    private UserLogin user;
 
     @Getter
     @Setter

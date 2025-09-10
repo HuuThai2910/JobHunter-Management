@@ -48,9 +48,9 @@ public class SecurityUtil {
 
     public String createAccessToken(String email, LoginResponse loginResponse) {
         LoginResponse.UserInsideToken userInsideToken = new LoginResponse.UserInsideToken();
-        userInsideToken.setId(loginResponse.getUserLogin().getId());
-        userInsideToken.setEmail(loginResponse.getUserLogin().getEmail());
-        userInsideToken.setName(loginResponse.getUserLogin().getName());
+        userInsideToken.setId(loginResponse.getUser().getId());
+        userInsideToken.setEmail(loginResponse.getUser().getEmail());
+        userInsideToken.setName(loginResponse.getUser().getName());
         Instant now = Instant.now();
         Instant validity = now.plus(this.accessTokenExpiration, ChronoUnit.SECONDS);
 //        Hard code permission
@@ -71,9 +71,9 @@ public class SecurityUtil {
     }
     public String createRefreshToken(String email, LoginResponse loginResponse) {
         LoginResponse.UserInsideToken userInsideToken = new LoginResponse.UserInsideToken();
-        userInsideToken.setId(loginResponse.getUserLogin().getId());
-        userInsideToken.setEmail(loginResponse.getUserLogin().getEmail());
-        userInsideToken.setName(loginResponse.getUserLogin().getName());
+        userInsideToken.setId(loginResponse.getUser().getId());
+        userInsideToken.setEmail(loginResponse.getUser().getEmail());
+        userInsideToken.setName(loginResponse.getUser().getName());
         Instant now = Instant.now();
         Instant validity = now.plus(this.refreshTokenExpiration, ChronoUnit.SECONDS);
 

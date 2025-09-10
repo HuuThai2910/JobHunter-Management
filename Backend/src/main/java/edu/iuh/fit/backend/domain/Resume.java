@@ -11,6 +11,7 @@ package edu.iuh.fit.backend.domain;
  * @version: 1.0
  */
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.iuh.fit.backend.util.SecurityUtil;
 import edu.iuh.fit.backend.util.constant.Status;
 import jakarta.persistence.*;

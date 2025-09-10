@@ -106,12 +106,12 @@ public class ResumeServiceImpl implements edu.iuh.fit.backend.service.ResumeServ
         Page<Resume> pageResume = this.resumeRepository.findAll(spec, pageable);
         ResultPaginationDTO rs = new ResultPaginationDTO();
         Meta meta = new Meta();
-        meta.setPages(pageable.getPageSize());
         meta.setPage(pageable.getPageNumber() + 1);
-        meta.setPageSize(pageResume.getTotalPages());
+        meta.setPageSize(pageable.getPageSize());
+        meta.setPages(pageResume.getTotalPages());
         meta.setTotal(pageResume.getTotalElements());
         rs.setMeta(meta);
-        rs.setResult(pageResume.getContent());
+        rs.setResult(this.resumeMapper.toListResumeResponse(pageResume.getContent()));
         return rs;
     }
 }
