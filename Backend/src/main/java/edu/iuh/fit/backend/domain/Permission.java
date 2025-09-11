@@ -43,6 +43,13 @@ public class Permission {
     @JsonIgnore
     private List<Role> roles;
 
+    public Permission(String name, String apiPath, String method, String moudle){
+        this.name = name;
+        this.apiPath = apiPath;
+        this.method = method;
+        this.module = moudle;
+    }
+
     @PrePersist
     void handleBeforeCreate(){
         this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent()

@@ -52,7 +52,7 @@ public class RoleController {
 //                if (this.roleService.existByName(r.getName())) {
 //                    throw new InvalidException("Role với name = " + r.getName() + "đã tồn tại");
 //                }
-                return ResponseEntity.status (HttpStatus.CREATED).body(this.roleService.update(r));
+                return ResponseEntity.ok(this.roleService.update(r));
     }
 
     @DeleteMapping("/roles/{id}")
