@@ -85,9 +85,9 @@ public class RoleServiceImpl implements RoleService {
         Page<Role> permissionPage = this.roleRepository.findAll(spec, pageable);
         ResultPaginationDTO resultPaginationDTO = new ResultPaginationDTO();
         Meta meta = new Meta();
-        meta.setPages(pageable.getPageSize());
         meta.setPage(pageable.getPageNumber() + 1);
-        meta.setPageSize(permissionPage.getTotalPages());
+        meta.setPageSize(pageable.getPageSize());
+        meta.setPages(permissionPage.getTotalPages());
         meta.setTotal(permissionPage.getTotalElements());
         resultPaginationDTO.setMeta(meta);
         resultPaginationDTO.setResult(permissionPage.getContent());

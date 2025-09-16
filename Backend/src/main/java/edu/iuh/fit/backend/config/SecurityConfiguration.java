@@ -11,6 +11,7 @@ import jakarta.servlet.DispatcherType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -53,13 +54,14 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
                                                    CustomAuthenticationEntryPoint customAuthenticationEntryPoint) throws Exception {
         String[] whiteList = {
-                "/", "/api/v1/auth/register", "/api/v1/auth/login", "/api/v1/auth/refresh", "/storage/**",
-                "/api/v1/companies/**", "/api/v1/jobs/**"
+                "/", "/api/v1/auth/register", "/api/v1/auth/login", "/api/v1/auth/refresh", "/storage/**"
         };
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(whiteList)
-                        .permitAll()
+                        .requestMatchers(whiteList).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/companies").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/jobs").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/skills").permitAll()
                         .anyRequest()
                         .authenticated())
 //                Dung de goi ra CORS filter

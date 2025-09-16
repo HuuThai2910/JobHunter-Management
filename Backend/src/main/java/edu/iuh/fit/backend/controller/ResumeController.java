@@ -5,12 +5,19 @@
 package edu.iuh.fit.backend.controller;
 
 import com.turkraft.springfilter.boot.Filter;
+import com.turkraft.springfilter.builder.FilterBuilder;
+import com.turkraft.springfilter.converter.FilterSpecificationConverter;
+import edu.iuh.fit.backend.domain.Company;
+import edu.iuh.fit.backend.domain.Job;
 import edu.iuh.fit.backend.domain.Resume;
+import edu.iuh.fit.backend.domain.User;
 import edu.iuh.fit.backend.dto.ResultPaginationDTO;
 import edu.iuh.fit.backend.dto.response.CreateResumeResponse;
 import edu.iuh.fit.backend.dto.response.ResumeResponse;
 import edu.iuh.fit.backend.dto.response.UpdateResumeResponse;
 import edu.iuh.fit.backend.service.ResumeService;
+import edu.iuh.fit.backend.service.UserService;
+import edu.iuh.fit.backend.util.SecurityUtil;
 import edu.iuh.fit.backend.util.annotaion.ApiMessage;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +25,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /*
  * @description
@@ -30,6 +40,9 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class ResumeController {
     private final ResumeService resumeService;
+    private final UserService userService;
+    private final FilterSpecificationConverter filterSpecificationConverter;
+    private final FilterBuilder filterBuilder;
 
     @PostMapping("/resumes")
     @ApiMessage("Create resume successfully")
@@ -39,9 +52,26 @@ public class ResumeController {
     }
 
     @GetMapping("/resumes")
-    @ApiMessage("Fetch all resume")
+    @ApiMessage("Fetch all resume with paginate")
     public ResponseEntity<ResultPaginationDTO> getAllCompanies(@Filter Specification<Resume> specification, Pageable pageable){
-        return ResponseEntity.ok(this.resumeService.handleGetAllResume(specification, pageable));
+        List<Long> jobIds = null;
+        String email = SecurityUtil.getCurrentUserLogin().isPresent() == true
+                ? SecurityUtil.getCurrentUserLogin().get()
+                : "";
+        User currentUser = this.userService.getUserByUserName(email);
+        if(currentUser != null){
+            Company userCompany = currentUser.getCompany();
+            if(userCompany != null){
+                List<Job> companyJob = userCompany.getJobs();
+                if(companyJob != null && !companyJob.isEmpty()){
+                    jobIds = companyJob.stream().map(Job::getId).toList();
+                }
+            }
+        }
+        Specification<Resume> jobInSpec = filterSpecificationConverter.convert(
+                filterBuilder.field("job").in(filterBuilder.input(jobIds)).get());
+        Specification<Resume> finalSpec = jobInSpec.and(specification);
+        return ResponseEntity.ok(this.resumeService.handleGetAllResume(finalSpec, pageable));
     }
 
     @GetMapping("/resumes/{id}")

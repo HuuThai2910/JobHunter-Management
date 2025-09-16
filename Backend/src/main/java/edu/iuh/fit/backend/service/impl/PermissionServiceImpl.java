@@ -74,9 +74,9 @@ public class PermissionServiceImpl implements PermissionService {
         Page<Permission> permissionPage = this.permissionRepository.findAll(spec, pageable);
         ResultPaginationDTO resultPaginationDTO = new ResultPaginationDTO();
         Meta meta = new Meta();
-        meta.setPages(pageable.getPageSize());
+        meta.setPageSize(pageable.getPageSize());
         meta.setPage(pageable.getPageNumber() + 1);
-        meta.setPageSize(permissionPage.getTotalPages());
+        meta.setPages(permissionPage.getTotalPages());
         meta.setTotal(permissionPage.getTotalElements());
         resultPaginationDTO.setMeta(meta);
         resultPaginationDTO.setResult(permissionPage.getContent());
