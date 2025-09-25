@@ -17,6 +17,7 @@ import edu.iuh.fit.backend.domain.User;
 import edu.iuh.fit.backend.service.UserService;
 import edu.iuh.fit.backend.util.SecurityUtil;
 import edu.iuh.fit.backend.util.error.InvalidException;
+import edu.iuh.fit.backend.util.error.PermissionException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,11 +61,11 @@ public class PermissionInterceptor implements HandlerInterceptor {
                             permission.getApiPath().equals(path) && permission.getMethod().equals(httpMethod)
                     );
                     if(!isAllow){
-                        throw new InvalidException("You do not have permission to access this endpoint");
+                        throw new PermissionException("You do not have permission to access this endpoint");
                     }
                 }
             }else {
-                throw new InvalidException("You do not have permission to access this endpoint");
+                throw new PermissionException("You do not have permission to access this endpoint");
             }
         }
         return true;

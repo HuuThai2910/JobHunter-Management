@@ -69,6 +69,13 @@ public class GlobalException {
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
     }
+    @ExceptionHandler(PermissionException.class)
+    public ResponseEntity<ApiResponse<?>> handlePermissionException(Exception e){
+        var result = new ApiResponse<>(
+                HttpStatus.FORBIDDEN.value(), "Forbiden", null, e.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(result);
+    }
 
 
 }
