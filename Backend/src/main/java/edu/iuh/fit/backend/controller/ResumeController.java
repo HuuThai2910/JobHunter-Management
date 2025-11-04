@@ -55,7 +55,7 @@ public class ResumeController {
     @ApiMessage("Fetch all resume with paginate")
     public ResponseEntity<ResultPaginationDTO> getAllCompanies(@Filter Specification<Resume> specification, Pageable pageable){
         List<Long> jobIds = null;
-        String email = SecurityUtil.getCurrentUserLogin().isPresent() == true
+        String email = SecurityUtil.getCurrentUserLogin().isPresent()
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
         User currentUser = this.userService.getUserByUserName(email);

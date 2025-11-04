@@ -16,6 +16,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 /*
  * @description
@@ -45,9 +46,13 @@ public class SkillServiceImpl implements SkillService {
     }
     @Override
     public void handleDeleteSkill(Long id){
-        if(this.skillRepository.findById(id).isEmpty()){
+        Optional<Skill> skillOptional = this.skillRepository.findById(id);
+        if(skillOptional.isEmpty()){
             throw new NoSuchElementException("Skill not found");
         }
+        Skill currentSkill = skillOptional.get();
+        currentSkill.getJobs().forEach(job -> job.getSkills().remove(currentSkill));
+        currentSkill.getSubscribers().forEach(subscriber -> subscriber.getSkills().remove(currentSkill));
         this.skillRepository.deleteById(id);
     }
     @Override

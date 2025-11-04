@@ -7,9 +7,7 @@ package edu.iuh.fit.backend.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import edu.iuh.fit.backend.util.SecurityUtil;
-import edu.iuh.fit.backend.util.constant.Level;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.Instant;
@@ -21,45 +19,44 @@ import java.util.List;
  * @date:
  * @version: 1.0
  */
-@Table(name = "skills")
+@Table(name = "subscribers")
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Skill {
+public class Subscriber {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message = "Name cannot be blank")
     private String name;
+    private String email;
+
+    @ManyToMany
+    @JoinTable(name = "subcriber_skill", joinColumns = @JoinColumn(name = "subscriber_id"),
+                                        inverseJoinColumns = @JoinColumn(name = "skill_id"))
+    @JsonIgnoreProperties(value = {"subscribers"})
+    private List<Skill> skills;
+
     private Instant createdAt;
     private Instant updatedAt;
     private String createdBy;
-    private  String updatedBy;
-
-    @ToString.Exclude
-    @ManyToMany(mappedBy = "skills")
-    @JsonIgnore
-    private List<Job> jobs;
-
-    @ManyToMany(mappedBy = "skills")
-    @JsonIgnore
-    private List<Subscriber> subscribers;
+    private String updatedBy;
 
     @PrePersist
-   void handleBeforeCreate(){
-        createdBy = SecurityUtil.getCurrentUserLogin().isPresent()
+    public void handleBeforeCreate(){
+        this.createdAt = Instant.now();
+        this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent()
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
-        createdAt = Instant.now();
+
     }
     @PreUpdate
-    void handleBeforeUpdate(){
-        updatedBy = SecurityUtil.getCurrentUserLogin().isPresent()
+    public void handleBeforeUpdate(){
+        this.updatedAt = Instant.now();
+        this.updatedBy = SecurityUtil.getCurrentUserLogin().isPresent()
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
-        updatedAt = Instant.now();
     }
 }

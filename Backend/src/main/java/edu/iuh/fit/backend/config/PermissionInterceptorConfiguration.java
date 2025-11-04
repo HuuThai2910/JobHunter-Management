@@ -17,7 +17,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 //Duoc su dung khi nguoi dung truy cap vao mot duong link khong duoc cap quyen
 //No hoat dong sau khi spring security chay va truoc khi request duoc dua toi controller
-//@Configuration
+@Configuration
 public class PermissionInterceptorConfiguration implements WebMvcConfigurer {
     @Bean
     PermissionInterceptor getPermissionInterceptor() {
@@ -28,7 +28,7 @@ public class PermissionInterceptorConfiguration implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         String[] whiteList = {
                 "/", "/api/v1/auth/**", "/storage/**",
-                "/api/v1/companies/**", "/api/v1/jobs/**", "/api/v1//**", "/api/v1/files"
+                "/api/v1/companies/**", "/api/v1/jobs/**",  "/api/v1/skills/**", "/api/v1/files"
         };
         registry.addInterceptor(getPermissionInterceptor())
                 .excludePathPatterns(whiteList);
