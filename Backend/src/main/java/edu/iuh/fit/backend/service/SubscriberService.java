@@ -9,7 +9,9 @@ package edu.iuh.fit.backend.service;/*
  * @version: 1.0
  */
 
+import edu.iuh.fit.backend.domain.Job;
 import edu.iuh.fit.backend.domain.Subscriber;
+import edu.iuh.fit.backend.dto.response.EmailJobResponse;
 import edu.iuh.fit.backend.util.error.InvalidException;
 
 public interface SubscriberService {
@@ -18,4 +20,8 @@ public interface SubscriberService {
     Subscriber handleUpdate(Subscriber subDB, Subscriber subsRequest);
 
     Subscriber findById(Long id);
+
+    EmailJobResponse convertJobToSendEmail(Job job);
+
+    void sendSubscribersEmailJobs();
 }
